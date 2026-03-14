@@ -1,0 +1,123 @@
+/* ── Emotion Tokens ── */
+/* Source de vérité : chaque humeur = un univers visuel complet */
+/* Appliqué via data-emotion attribute sur un conteneur parent */
+
+[data-emotion="melancholie"] {
+  --em-bg:             #1a2744;
+  --em-bg-2:           #3d5a80;
+  --em-text:           #e8eaf6;
+  --em-accent:         #90a4ae;
+  --em-font:           'Playfair Display', serif;
+  --em-weight:         400;
+  --em-spacing:        0.02em;
+  --em-transform:      none;
+  --em-grain:          0.45;
+  --em-vignette:       0.70;
+  --em-light-leak:     0;
+  --em-styles:         'cosmos,aquarelle,manuscrit,poetique,cinema';
+}
+
+[data-emotion="energie"] {
+  --em-bg:             #f59e0b;
+  --em-bg-2:           #dc2626;
+  --em-text:           #1c1917;
+  --em-accent:         #fbbf24;
+  --em-font:           'Inter', sans-serif;
+  --em-weight:         900;
+  --em-spacing:        -0.02em;
+  --em-transform:      uppercase;
+  --em-grain:          0.05;
+  --em-vignette:       0.10;
+  --em-light-leak:     0;
+  --em-styles:         'bold,neon,retrowave,street,glitch';
+}
+
+[data-emotion="paix"] {
+  --em-bg:             #d1fae5;
+  --em-bg-2:           #6ee7b7;
+  --em-text:           #064e3b;
+  --em-accent:         #a7f3d0;
+  --em-font:           'Cormorant Garamond', serif;
+  --em-weight:         300;
+  --em-spacing:        0.08em;
+  --em-transform:      none;
+  --em-grain:          0.15;
+  --em-vignette:       0.20;
+  --em-light-leak:     0;
+  --em-styles:         'zen,minimal,aquarelle,tropical,journal';
+}
+
+[data-emotion="colere"] {
+  --em-bg:             #1c0a0a;
+  --em-bg-2:           #7f1d1d;
+  --em-text:           #fef2f2;
+  --em-accent:         #dc2626;
+  --em-font:           'Oswald', sans-serif;
+  --em-weight:         700;
+  --em-spacing:        0.01em;
+  --em-transform:      uppercase;
+  --em-grain:          0.60;
+  --em-vignette:       0.80;
+  --em-light-leak:     0;
+  --em-styles:         'gothic,glitch,bold,street,broadcast';
+}
+
+[data-emotion="nostalgie"] {
+  --em-bg:             #78350f;
+  --em-bg-2:           #b45309;
+  --em-text:           #fef3c7;
+  --em-accent:         #fcd34d;
+  --em-font:           'Lora', serif;
+  --em-weight:         400;
+  --em-spacing:        0.04em;
+  --em-transform:      none;
+  --em-grain:          0.55;
+  --em-vignette:       0.60;
+  --em-light-leak:     1;
+  --em-styles:         'polaroid,argentique,vhs,retro,journal';
+}
+
+[data-emotion="amour"] {
+  --em-bg:             #4c0519;
+  --em-bg-2:           #9f1239;
+  --em-text:           #fff1f2;
+  --em-accent:         #fb7185;
+  --em-font:           'Nunito', sans-serif;
+  --em-weight:         300;
+  --em-spacing:        0.03em;
+  --em-transform:      none;
+  --em-grain:          0.10;
+  --em-vignette:       0.35;
+  --em-light-leak:     0;
+  --em-styles:         'elegant,poetique,paris,lofi,liquid';
+}
+
+[data-emotion="anxiete"] {
+  --em-bg:             #0f2027;
+  --em-bg-2:           #203a43;
+  --em-text:           #e2e8f0;
+  --em-accent:         #64748b;
+  --em-font:           'Space Mono', monospace;
+  --em-weight:         400;
+  --em-spacing:        0em;
+  --em-transform:      none;
+  --em-grain:          0.70;
+  --em-vignette:       0.50;
+  --em-light-leak:     0;
+  --em-styles:         'blueprint,glitch,sms,ticket,mono';
+}
+
+[data-emotion="gratitude"] {
+  --em-bg:             #1c1403;
+  --em-bg-2:           #713f12;
+  --em-text:           #fefce8;
+  --em-accent:         #facc15;
+  --em-font:           'Crimson Text', serif;
+  --em-weight:         400;
+  --em-spacing:        0.05em;
+  --em-transform:      none;
+  --em-grain:          0.20;
+  --em-vignette:       0.25;
+  --em-light-leak:     0;
+  --em-styles:         'luxe,philo,encre,crystal,minimal';
+}

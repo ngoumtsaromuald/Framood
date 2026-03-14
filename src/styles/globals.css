@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ── Palette de base (identique au prototype) ── */
+  --gold:        #C8A050;
+  --gold-light:  #E8C878;
+  --gold-dark:   #8A6020;
+  --gold-dim:    rgba(200, 160, 80, 0.15);
+
+  --bg:          #0A0906;
+  --card:        #131109;
+  --card-2:      #181510;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-gold: rgba(200, 160, 80, 0.25);
+
+  --cream:       #F0E8D0;
+  --muted:       rgba(240, 232, 208, 0.38);
+  --muted-2:     rgba(240, 232, 208, 0.55);
+
+  /* ── Sémantique ── */
+  --success:     #50C070;
+  --warning:     #E8A020;
+  --error:       #E05040;
+  --info:        #5080E0;
+
+  /* ── Espacements (8pt grid) ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Rayons ── */
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+  --radius-pill: 999px;
+
+  /* ── Typographie ── */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+
+  /* ── Ombres ── */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md:  0 8px 24px rgba(0,0,0,0.6);
+  --shadow-lg:  0 20px 48px rgba(0,0,0,0.8);
+  --shadow-gold: 0 0 24px rgba(200,160,80,0.15);
+
+  /* ── Transitions ── */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+}
+
+/* ── Base Resets ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--cream);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-gold);
+  border-radius: var(--radius-pill);
+}
+
+/* ── Focus Visible ── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--gold-dim);
+  color: var(--gold-light);
+}
+
+/* ── Smooth scroll for anchors ── */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
