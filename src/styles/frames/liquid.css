@@ -1,0 +1,7 @@
+/* ── DÉGRADÉ LIQUIDE ── */
+.l-liquid { padding: 42px 26px; justify-content: center; }
+.li-tag { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 18px; opacity: .5; }
+.li-m { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-weight: 300; line-height: 1.35; margin-bottom: 20px; }
+.li-m em { font-style: italic; font-weight: 700; }
+.li-w { width: 38px; height: 2px; border-radius: 2px; margin-bottom: 14px; opacity: .6; }
+.li-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; line-height: 1.9; opacity: .7; max-width: 185px; }

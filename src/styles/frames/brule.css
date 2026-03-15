@@ -1,0 +1,6 @@
+/* ── PAPIER BRÛLÉ ── */
+.l-brule { padding: 42px 26px; justify-content: center; background: linear-gradient(160deg, #1a0e06, #0e0804); }
+.br-tag { font-family: 'Libre Baskerville', serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: #c8a050; margin-bottom: 18px; opacity: .6; }
+.br-m { font-family: 'Libre Baskerville', serif; font-size: 21px; font-style: italic; color: #e8d8b0; line-height: 1.45; margin-bottom: 18px; }
+.br-t { width: 22px; height: 1px; background: #c8a050; opacity: .35; margin-bottom: 14px; }
+.br-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(232,216,176,.6); line-height: 1.9; }

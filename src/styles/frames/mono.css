@@ -1,0 +1,9 @@
+/* ── MONOCHROME CROP ── */
+.l-mono { padding: 0; justify-content: flex-end; background: #fff; }
+.mo-accent { position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: #000; }
+.mo-cnt { padding: 40px 28px 40px 44px; }
+.mo-num { font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+.mo-m { font-family: 'Abril Fatface', serif; font-size: 28px; color: #000; line-height: 1.1; margin-bottom: 16px; }
+.mo-m em { font-style: italic; font-family: 'Playfair Display', serif; font-size: 22px; }
+.mo-t { width: 100%; height: 2px; background: #000; margin-bottom: 14px; }
+.mo-s { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #444; line-height: 1.75; }

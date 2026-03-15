@@ -1,0 +1,9 @@
+/* ── LUXE ── */
+.l-luxe { padding: 50px 30px; justify-content: center; align-items: center; text-align: center; background: #0a0805; }
+.lx-maison { font-family: 'DM Sans', sans-serif; font-size: 7px; letter-spacing: 8px; text-transform: uppercase; color: #c8a050; margin-bottom: 36px; opacity: .6; }
+.lx-logo { width: 32px; height: 1px; background: #c8a050; margin: 0 auto 28px; opacity: .5; }
+.lx-m { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; font-style: italic; color: #e8d8b0; line-height: 1.6; letter-spacing: 1px; margin-bottom: 30px; }
+.lx-sep { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.lx-sep::before, .lx-sep::after { content: ''; flex: 1; height: 1px; background: rgba(200,160,80,.3); }
+.lx-sep span { font-size: 8px; color: #c8a050; letter-spacing: 3px; }
+.lx-s { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: rgba(200,160,80,.5); }

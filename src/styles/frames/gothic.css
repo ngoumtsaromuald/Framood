@@ -1,0 +1,12 @@
+/* ── GOTHIQUE ── */
+.l-gothic { padding: 44px 28px; justify-content: center; background: #050308; }
+.go-border { position: absolute; inset: 12px; border: 1px solid rgba(180,140,200,.15); pointer-events: none; }
+.go-corner { position: absolute; width: 16px; height: 16px; border-color: rgba(180,140,200,.4); border-style: solid; border-width: 0; }
+.go-tl { top: 12px; left: 12px; border-top-width: 1px; border-left-width: 1px; }
+.go-tr { top: 12px; right: 12px; border-top-width: 1px; border-right-width: 1px; }
+.go-bl { bottom: 12px; left: 12px; border-bottom-width: 1px; border-left-width: 1px; }
+.go-br { bottom: 12px; right: 12px; border-bottom-width: 1px; border-right-width: 1px; }
+.go-tag { font-family: 'Libre Baskerville', serif; font-size: 8px; letter-spacing: 5px; text-transform: uppercase; color: #a080c0; margin-bottom: 20px; opacity: .7; }
+.go-m { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: #d0c0e0; line-height: 1.45; margin-bottom: 20px; }
+.go-sym { font-size: 16px; color: #a080c0; margin-bottom: 16px; opacity: .5; }
+.go-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(200,180,220,.5); line-height: 1.9; }

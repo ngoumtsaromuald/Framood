@@ -1,0 +1,10 @@
+/* ── PHOTO ARGENTIQUE ── */
+.l-argentique { padding: 0; justify-content: flex-end; overflow: hidden; }
+.ar-photo { position: absolute; inset: 0; background: linear-gradient(160deg, #1a1008, #2a2010); filter: saturate(.5) sepia(.3); }
+.ar-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.85) 100%); z-index: 1; }
+.ar-grain2 { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"); background-size: 150px; z-index: 2; mix-blend-mode: overlay; }
+.ar-frame { position: absolute; inset: 0; border: 12px solid rgba(0,0,0,.6); z-index: 3; }
+.ar-cnt { position: relative; z-index: 4; padding: 0 24px 36px; }
+.ar-roll { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,200,100,.5); margin-bottom: 12px; }
+.ar-m { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; font-style: italic; color: #f5e8c0; line-height: 1.4; margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+.ar-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(240,220,160,.5); line-height: 1.8; }

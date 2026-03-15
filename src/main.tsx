@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
+import ToastContainer from '@/components/ui/Toast';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Fonts (self-hosted via fontsource)
 import '@fontsource/cormorant-garamond/300.css';
@@ -43,10 +45,14 @@ const queryClient = new QueryClient({
   },
 });
 
+// Initialize auth session check on app start
+useAuthStore.getState().initialize();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+      <ToastContainer />
     </QueryClientProvider>
   </StrictMode>
 );

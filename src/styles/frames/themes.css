@@ -1,0 +1,112 @@
+/* ══ BACKGROUND / THEME CLASSES ══ */
+/* Extracted as-is from prototype — used by Polaroid, Elegant, Bold, Neon, Cinema, Liquid */
+
+.bg-sunset { background: radial-gradient(ellipse at 50% 60%, rgba(240,160,40,.7) 0%, transparent 50%), linear-gradient(180deg, #1a0d00, #c05000, #ffd060); }
+.bg-night  { background: radial-gradient(ellipse at 30% 40%, rgba(40,80,160,.6) 0%, transparent 45%), linear-gradient(180deg, #000308, #04102a); }
+.bg-forest { background: radial-gradient(ellipse at 50% 50%, rgba(180,220,160,.3) 0%, transparent 60%), linear-gradient(160deg, #010a01, #020c04); }
+.bg-desert { background: radial-gradient(ellipse at 50% 40%, rgba(220,140,40,.6) 0%, transparent 55%), linear-gradient(180deg, #100800, #e8a050); }
+.bg-ocean  { background: radial-gradient(ellipse at 40% 50%, rgba(0,120,200,.6) 0%, transparent 55%), linear-gradient(180deg, #000c18, #0060a0); }
+.bg-rose   { background: radial-gradient(ellipse at 50% 30%, rgba(180,60,80,.65) 0%, transparent 55%), linear-gradient(160deg, #0d0205, #c03050); }
+
+.ef-rose  { background: radial-gradient(ellipse at 50% 30%, rgba(180,60,80,.6) 0%, transparent 55%), #0d0205; }
+.ef-lilas { background: radial-gradient(ellipse at 30% 20%, rgba(120,80,180,.55) 0%, transparent 55%), #050108; }
+.ef-ambre { background: radial-gradient(ellipse at 70% 40%, rgba(200,120,40,.5) 0%, transparent 55%), #080300; }
+.ef-bleu  { background: radial-gradient(ellipse at 50% 30%, rgba(40,80,180,.6) 0%, transparent 55%), #020510; }
+
+.bf-gold  { background: radial-gradient(ellipse at 50% 20%, rgba(220,170,30,.55) 0%, transparent 55%), #06040a; }
+.bf-red   { background: radial-gradient(ellipse at 20% 10%, rgba(180,20,20,.55) 0%, transparent 55%), #080000; }
+.bf-green { background: radial-gradient(ellipse at 80% 0%, rgba(60,130,80,.45) 0%, transparent 55%), #020a04; }
+.bf-blue  { background: radial-gradient(ellipse at 50% 20%, rgba(30,80,200,.6) 0%, transparent 55%), #000210; }
+
+.nf-cyan  { background: #020010; }
+.nf-pink  { background: #100008; }
+.nf-green { background: #001008; }
+
+.ci-space  { background: linear-gradient(160deg, #020210, #0a0520); }
+.ci-desert { background: linear-gradient(160deg, #1a0800, #0a0400); }
+
+.lf-coral  { background: linear-gradient(135deg, #1a0510, #300820, #501830); }
+.lf-ocean  { background: linear-gradient(135deg, #040e20, #081830, #0a2040); }
+.lf-forest { background: linear-gradient(135deg, #020a04, #041208, #061808); }
+
+/* ══ COLOR OVERRIDES PER THEME ══ */
+
+/* Polaroid */
+.bg-sunset .pol-main, .bg-desert .pol-main { color: #f5e090; }
+.bg-night .pol-main, .bg-ocean .pol-main { color: #d8e8ff; }
+.bg-forest .pol-main { color: #c8f0c0; }
+.bg-rose .pol-main { color: #f5c8d0; }
+
+/* Elegant & Poétique */
+.ef-rose .l-elegant, .ef-rose .l-poetique { color: #f5c8d0; }
+.ef-rose .el-g, .ef-rose .po-g { color: #ff9aaa; }
+.ef-rose .el-t, .ef-rose .po-t { background: #d0607a; }
+
+.ef-lilas .l-elegant, .ef-lilas .l-poetique { color: #e0cff5; }
+.ef-lilas .el-g, .ef-lilas .po-g { color: #c8a8ff; }
+.ef-lilas .el-t, .ef-lilas .po-t { background: #9060c0; }
+
+.ef-ambre .l-elegant, .ef-ambre .l-poetique { color: #f5dfc0; }
+.ef-ambre .el-g, .ef-ambre .po-g { color: #ffbe70; }
+.ef-ambre .el-t, .ef-ambre .po-t { background: #c07830; }
+
+.ef-bleu .l-elegant, .ef-bleu .l-poetique { color: #c0d8ff; }
+.ef-bleu .el-g, .ef-bleu .po-g { color: #80b0ff; }
+.ef-bleu .el-t, .ef-bleu .po-t { background: #4060c0; }
+
+/* Bold */
+.bf-gold .l-bold { color: #f5e090; }
+.bf-gold .bo-t { background: #c8a030; }
+.bf-red .l-bold { color: #f5cdc0; }
+.bf-red .bo-t { background: #c04040; }
+.bf-green .l-bold { color: #c8f0c0; }
+.bf-green .bo-t { background: #50b060; }
+.bf-blue .l-bold { color: #c0d8ff; }
+.bf-blue .bo-t { background: #4060c0; }
+
+/* Neon */
+.nf-cyan .l-neon { color: #00ffee; }
+.nf-cyan .ne-m { text-shadow: 0 0 20px #00ffee, 0 0 40px #00ffee; }
+.nf-cyan .ne-t { background: #00ffee; }
+.nf-cyan .ne-tag { color: #00ffee; }
+
+.nf-pink .l-neon { color: #ff40a0; }
+.nf-pink .ne-m { text-shadow: 0 0 20px #ff40a0, 0 0 40px #ff40a0; }
+.nf-pink .ne-t { background: #ff40a0; }
+.nf-pink .ne-tag { color: #ff40a0; }
+
+.nf-green .l-neon { color: #40ff80; }
+.nf-green .ne-m { text-shadow: 0 0 20px #40ff80, 0 0 40px #40ff80; }
+.nf-green .ne-t { background: #40ff80; }
+.nf-green .ne-tag { color: #40ff80; }
+
+/* Liquid */
+.lf-coral .l-liquid { color: #f5c8b0; }
+.lf-coral .li-w { background: linear-gradient(90deg, #ff8060, #ff4040); }
+.lf-ocean .l-liquid { color: #b0d0f0; }
+.lf-ocean .li-w { background: linear-gradient(90deg, #4080ff, #00c0ff); }
+.lf-forest .l-liquid { color: #b0e0c0; }
+.lf-forest .li-w { background: linear-gradient(90deg, #40c060, #80ff80); }
+
+/* ══ GRAIN & VIGNETTE OVERLAYS ══ */
+
+.frame-screen.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 200px;
+  opacity: .7;
+  pointer-events: none;
+  z-index: 4;
+  mix-blend-mode: overlay;
+}
+
+.frame-screen.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.72) 100%);
+  pointer-events: none;
+  z-index: 3;
+}

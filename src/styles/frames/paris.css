@@ -1,0 +1,9 @@
+/* ── NÉON PARIS ── */
+.l-paris { padding: 42px 26px; justify-content: flex-end; background: #02040a; }
+.pa-tour { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 200px; opacity: .15; }
+.pa-tour::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: linear-gradient(transparent, #ffd060); }
+.pa-tour::after { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 1px; background: rgba(255,208,96,.3); }
+.pa-tag { font-family: 'Cormorant Garamond', serif; font-size: 9px; letter-spacing: 6px; text-transform: uppercase; color: #ffd060; margin-bottom: 16px; opacity: .6; font-style: italic; }
+.pa-m { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; font-style: italic; color: #ffd060; line-height: 1.4; margin-bottom: 16px; text-shadow: 0 0 30px rgba(255,208,96,0.4); }
+.pa-t { width: 28px; height: 1px; background: #ffd060; opacity: .4; margin-bottom: 14px; }
+.pa-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(255,208,96,.45); line-height: 1.9; }

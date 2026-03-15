@@ -1,0 +1,8 @@
+/* ── MIAMI ── */
+.l-miami { padding: 42px 24px; justify-content: center; background: linear-gradient(160deg, #0a1a2a, #1a0a2a); }
+.mi2-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,200,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.05) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+.mi2-tag { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 5px; text-transform: uppercase; color: #00d4ff; margin-bottom: 16px; opacity: .7; }
+.mi2-m { font-family: 'Unbounded', sans-serif; font-size: 19px; font-weight: 400; color: #fff; line-height: 1.3; margin-bottom: 6px; text-shadow: 0 0 20px rgba(0,212,255,0.4); }
+.mi2-a { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 300; color: #ff40a0; line-height: 1.3; margin-bottom: 16px; text-shadow: 0 0 20px rgba(255,64,160,0.4); }
+.mi2-t { width: 38px; height: 2px; background: linear-gradient(90deg, #00d4ff, #ff40a0); margin-bottom: 14px; border-radius: 2px; }
+.mi2-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(255,255,255,.5); line-height: 1.9; }

@@ -1,0 +1,7 @@
+/* ── SMS VINTAGE ── */
+.l-sms { padding: 28px 22px; justify-content: center; background: #c8d0c0; }
+.sms-screen { background: #8a9a80; border: 2px inset #607060; border-radius: 4px; padding: 14px 12px; margin-bottom: 12px; }
+.sms-chars { font-family: 'Space Mono', monospace; font-size: 8px; color: #2a3020; text-align: right; margin-bottom: 7px; opacity: .6; }
+.sms-t { font-family: 'Space Mono', monospace; font-size: 12px; color: #1a2010; line-height: 1.5; font-weight: 700; }
+.sms-btns { display: flex; justify-content: space-between; }
+.sms-btn { font-family: 'Space Mono', monospace; font-size: 9px; color: #2a3020; opacity: .7; letter-spacing: 1px; }

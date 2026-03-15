@@ -1,0 +1,8 @@
+/* ── CINÉMA ── */
+.l-cinema { justify-content: flex-end; background: #000; }
+.cin-top { position: absolute; top: 0; left: 0; right: 0; height: 68px; background: #000; z-index: 8; }
+.cin-bot { position: absolute; bottom: 0; left: 0; right: 0; height: 68px; background: #000; z-index: 8; }
+.cin-bg { position: absolute; top: 68px; bottom: 68px; left: 0; right: 0; z-index: 6; }
+.cin-txt { position: absolute; bottom: 78px; left: 0; right: 0; text-align: center; z-index: 9; padding: 0 22px; }
+.ci-m { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300; color: #fff; letter-spacing: 2px; line-height: 1.55; font-style: italic; }
+.ci-s { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,.35); margin-top: 7px; }

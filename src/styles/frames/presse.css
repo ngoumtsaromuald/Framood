@@ -1,0 +1,10 @@
+/* ── PRESSE ── */
+.l-presse { padding: 34px 22px; justify-content: flex-start; background: #f4f0e4; }
+.pr-h { border-top: 3px solid #1a1810; border-bottom: 1px solid #1a1810; padding: 5px 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.pr-j { font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 700; color: #1a1810; letter-spacing: 2px; text-transform: uppercase; }
+.pr-dt { font-family: 'DM Sans', sans-serif; font-size: 7px; color: #666; letter-spacing: 1px; }
+.pr-k { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: #c00; margin-bottom: 7px; }
+.pr-m { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #1a1810; line-height: 1.15; margin-bottom: 10px; letter-spacing: -.3px; }
+.pr-m em { font-style: italic; font-weight: 400; }
+.pr-d { width: 100%; height: 1px; background: rgba(26,24,16,.15); margin-bottom: 10px; }
+.pr-s { font-family: 'Libre Baskerville', serif; font-size: 10px; color: #444; line-height: 1.75; }

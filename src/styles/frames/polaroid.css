@@ -1,0 +1,11 @@
+/* ── POLAROID ── */
+.l-polaroid { justify-content: flex-end; padding: 0 0 30px; }
+.pol-frame { position: absolute; z-index: 7; background: #f5f0e4; padding: 8px 8px 28px; box-shadow: 0 6px 22px rgba(0,0,0,.7); top: 50px; left: 20px; width: 138px; transform: rotate(-3deg); transition: transform .3s; }
+.scotch { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 38px; height: 11px; background: rgba(255,240,180,0.4); border-radius: 2px; z-index: 8; pointer-events: none; }
+.pol-photo { width: 100%; aspect-ratio: 1; overflow: hidden; background: #2a2010; }
+.pol-img { width: 100%; height: 100%; object-fit: cover; display: none; filter: saturate(.75) contrast(1.1) sepia(.15); }
+.pol-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 18px; opacity: .2; background: linear-gradient(160deg, #3a2800, #1a1000); }
+.pol-cap { text-align: center; margin-top: 5px; font-family: 'Reenie Beanie', cursive; font-size: 11px; color: #2a2010; min-height: 14px; }
+.pol-txt { padding: 0 18px; z-index: 7; position: relative; }
+.pol-main { font-family: 'Caveat', cursive; font-size: 25px; font-weight: 700; line-height: 1.15; text-shadow: 0 2px 12px rgba(0,0,0,.9); color: #fff; word-break: break-word; }
+.pol-sub { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; font-style: italic; line-height: 1.7; opacity: .65; margin-top: 4px; text-shadow: 0 1px 8px rgba(0,0,0,.9); color: #fff; }

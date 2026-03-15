@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Moodframe — Bibliothèque de Citations</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,400;1,600&family=DM+Sans:wght@200;300;400;500&family=Bebas+Neue&family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Ephesis&family=Italiana&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0A0906; --card:#111009; --card2:#181510; --border:rgba(255,255,255,0.06);
+  --gold:#C8A050; --gold-light:#E8C878; --gold-dim:rgba(200,160,80,0.15);
+  --cream:#F0E8D0; --muted:rgba(240,232,208,0.35); --muted2:rgba(240,232,208,0.55);
+  --red:#e05040; --green:#50c070; --blue:#5080e0;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ══ LAYOUT ══ */
+.app { display:grid; grid-template-columns:260px 1fr 300px; grid-template-rows:56px 1fr; height:100vh; }
+@media(max-width:900px){ .app{grid-template-columns:1fr;grid-template-rows:56px auto 1fr;} .sidebar{display:none;} .preview-col{display:none;} }
+
+/* ══ TOPBAR ══ */
+.topbar {
+  grid-column:1/-1; background:rgba(10,9,6,0.95); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 20px; gap:16px; backdrop-filter:blur(12px);
+  position:sticky; top:0; z-index:50;
+}
+.logo { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; letter-spacing:2px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.logo .mood { color:var(--gold); font-style:italic; font-weight:600; }
+.topbar-divider { width:1px; height:20px; background:var(--border); flex-shrink:0; }
+.topbar-title { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+.topbar-count { margin-left:auto; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); background:rgba(200,160,80,0.1); border:1px solid rgba(200,160,80,0.2); padding:4px 12px; border-radius:20px; flex-shrink:0; }
+
+/* Search */
+.search-wrap { flex:1; max-width:380px; position:relative; }
+.search-wrap input {
+  width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  border-radius:10px; padding:8px 14px 8px 36px; color:var(--cream); font-size:13px;
+  font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s;
+}
+.search-wrap input:focus { border-color:rgba(200,160,80,0.3); }
+.search-wrap input::placeholder { color:var(--muted); }
+.search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:13px; opacity:.4; pointer-events:none; }
+.search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; display:none; padding:2px; }
+.search-clear.show { display:block; }
+
+/* ══ SIDEBAR ══ */
+.sidebar {
+  background:var(--card); border-right:1px solid var(--border);
+  overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(200,160,80,0.2) transparent;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:rgba(200,160,80,0.2); border-radius:3px; }
+
+.sidebar-section { padding:18px 16px 8px; }
+.sidebar-label { font-size:8px; font-weight:500; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; display:block; }
+.mood-list { display:flex; flex-direction:column; gap:2px; }
+.mood-item {
+  display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px;
+  cursor:pointer; transition:all .15s; border:1px solid transparent; position:relative;
+}
+.mood-item:hover { background:rgba(255,255,255,0.04); }
+.mood-item.active { background:var(--gold-dim); border-color:rgba(200,160,80,0.2); }
+.mood-emoji { font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+.mood-name { font-size:13px; font-weight:300; color:var(--muted2); flex:1; }
+.mood-item.active .mood-name { color:var(--gold); }
+.mood-count { font-size:10px; color:var(--muted); background:rgba(255,255,255,0.05); padding:2px 7px; border-radius:10px; }
+.mood-item.active .mood-count { background:rgba(200,160,80,0.15); color:var(--gold); }
+
+.sidebar-divider { height:1px; background:var(--border); margin:12px 16px; }
+
+/* Lang filter */
+.lang-pills { display:flex; gap:6px; }
+.lang-pill { padding:5px 12px; border-radius:20px; font-size:10px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--muted); cursor:pointer; transition:all .15s; }
+.lang-pill.active { border-color:rgba(200,160,80,0.3); color:var(--gold); background:rgba(200,160,80,0.08); }
+
+/* Tone filter */
+.tone-list { display:flex; flex-direction:column; gap:2px; }
+.tone-item { display:flex; align-items:center; gap:9px; padding:7px 12px; border-radius:8px; cursor:pointer; transition:all .15s; font-size:12px; color:var(--muted); }
+.tone-item:hover { background:rgba(255,255,255,0.03); color:var(--muted2); }
+.tone-item.active { color:var(--cream); }
+.tone-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ══ MAIN ══ */
+.main { overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(200,160,80,0.1) transparent; }
+.main::-webkit-scrollbar { width:3px; }
+.main::-webkit-scrollbar-thumb { background:rgba(200,160,80,0.15); border-radius:3px; }
+
+/* Mood hero strip */
+.mood-hero {
+  padding:28px 24px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:16px; position:sticky; top:0;
+  background:rgba(10,9,6,0.96); backdrop-filter:blur(12px); z-index:10;
+}
+.mood-hero-emoji { font-size:32px; }
+.mood-hero-text h2 { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; }
+.mood-hero-text h2 em { font-style:italic; color:var(--gold); }
+.mood-hero-text p { font-size:11px; color:var(--muted); margin-top:3px; letter-spacing:1px; }
+.mood-hero-actions { margin-left:auto; display:flex; gap:8px; }
+.btn-sm { padding:7px 14px; border-radius:20px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--muted); transition:all .2s; white-space:nowrap; }
+.btn-sm:hover { border-color:rgba(200,160,80,0.3); color:var(--cream); }
+.btn-sm.primary { background:var(--gold); border-color:var(--gold); color:#0a0600; }
+.btn-sm.primary:hover { background:var(--gold-light); }
+
+/* Sort bar */
+.sort-bar { padding:10px 24px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); }
+.sort-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+.sort-pills { display:flex; gap:6px; }
+.sort-pill { padding:4px 11px; border-radius:20px; font-size:10px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; }
+.sort-pill.active { border-color:rgba(200,160,80,0.3); color:var(--gold); }
+.result-count { margin-left:auto; font-size:10px; color:var(--muted); }
+
+/* Citations grid */
+.cites-grid { padding:16px 20px; display:flex; flex-direction:column; gap:10px; }
+
+/* Citation card */
+.cite-card {
+  background:var(--card2); border:1px solid var(--border); border-radius:14px;
+  padding:18px 18px 14px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden;
+}
+.cite-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); opacity:0; transition:opacity .2s; border-radius:3px 0 0 3px; }
+.cite-card:hover { border-color:rgba(200,160,80,0.2); transform:translateY(-1px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.cite-card:hover::before { opacity:.6; }
+.cite-card.selected { border-color:rgba(200,160,80,0.5); background:rgba(200,160,80,0.04); }
+.cite-card.selected::before { opacity:1; }
+
+.cite-main { font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; line-height:1.55; color:var(--cream); margin-bottom:8px; }
+.cite-sub { font-size:11px; font-weight:300; color:var(--muted); line-height:1.7; margin-bottom:12px; }
+.cite-footer { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.cite-tag { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:3px 8px; border-radius:10px; }
+.cite-lang { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:3px 8px; border-radius:10px; }
+.cite-tone-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.cite-actions { margin-left:auto; display:flex; gap:6px; opacity:0; transition:opacity .2s; }
+.cite-card:hover .cite-actions { opacity:1; }
+.cite-action-btn { background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:8px; padding:5px 10px; font-size:10px; color:var(--muted); cursor:pointer; transition:all .15s; }
+.cite-action-btn:hover { background:rgba(200,160,80,0.12); border-color:rgba(200,160,80,0.3); color:var(--gold); }
+.cite-action-btn.use { background:var(--gold); border-color:var(--gold); color:#0a0600; }
+.cite-action-btn.use:hover { background:var(--gold-light); }
+.cite-fav { position:absolute; top:14px; right:14px; background:none; border:none; font-size:14px; cursor:pointer; opacity:.25; transition:opacity .2s; }
+.cite-card:hover .cite-fav { opacity:.6; }
+.cite-fav.active { opacity:1 !important; }
+
+/* Empty state */
+.empty-state { padding:60px 24px; text-align:center; }
+.empty-state .e-icon { font-size:40px; margin-bottom:16px; opacity:.4; }
+.empty-state h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; font-style:italic; margin-bottom:8px; }
+.empty-state p { font-size:12px; color:var(--muted); line-height:1.7; }
+
+/* ══ PREVIEW COLUMN ══ */
+.preview-col {
+  background:var(--card); border-left:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.preview-header { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.preview-header-title { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); }
+.style-mini-scroll { display:flex; gap:6px; overflow-x:auto; padding:10px 18px; scrollbar-width:none; border-bottom:1px solid var(--border); }
+.style-mini-scroll::-webkit-scrollbar { display:none; }
+.style-mini { border-radius:20px; padding:5px 12px; font-size:10px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .15s; }
+.style-mini.active { border-color:var(--gold); color:var(--gold); background:rgba(200,160,80,0.08); }
+
+/* Phone preview */
+.preview-phone-wrap { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:14px; overflow:hidden; }
+.preview-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+.mini-phone { width:148px; height:302px; border-radius:28px; background:linear-gradient(160deg,#1e1e1a,#0a0a08); box-shadow:0 0 0 1px rgba(255,255,255,0.07),0 20px 40px rgba(0,0,0,0.8); padding:6px; flex-shrink:0; }
+.mini-screen { width:100%; height:100%; border-radius:22px; overflow:hidden; position:relative; transition:background .3s; }
+
+/* Mini screen styles */
+.ms-grain::before { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); background-size:200px; opacity:.7; pointer-events:none; z-index:4; mix-blend-mode:overlay; }
+.ms-vignette::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.7) 100%); pointer-events:none; z-index:3; }
+.ms-layer { position:absolute; inset:0; display:flex; flex-direction:column; z-index:5; padding:22px 16px 18px; }
+
+/* Mini style renderers */
+.ms-typo { background:#fff; justify-content:center; }
+.ms-typo .t { font-family:'Helvetica Neue',Arial,sans-serif; font-size:13px; font-weight:900; color:#000; line-height:1.15; margin-bottom:6px; }
+.ms-typo .s { font-size:8px; color:#444; line-height:1.6; }
+.ms-typo .d { width:14px; height:2px; background:#000; margin-bottom:8px; }
+
+.ms-elegant { justify-content:center; }
+.ms-elegant .g { font-family:'Ephesis',cursive; font-size:28px; line-height:1; margin-bottom:4px; }
+.ms-elegant .t { font-family:'Italiana',serif; font-size:11px; line-height:1.35; margin-bottom:10px; }
+.ms-elegant .s { font-size:8px; font-weight:200; line-height:1.8; opacity:.7; }
+
+.ms-bold { justify-content:center; }
+.ms-bold .t { font-family:'Bebas Neue',sans-serif; font-size:30px; line-height:1; letter-spacing:1px; margin-bottom:8px; }
+.ms-bold .t em { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; letter-spacing:0; line-height:1.3; display:block; }
+.ms-bold .s { font-size:8px; font-weight:200; line-height:1.8; opacity:.7; }
+
+.ms-poetique { justify-content:center; align-items:center; text-align:center; }
+.ms-poetique .g { font-family:'Ephesis',cursive; font-size:30px; line-height:1; margin-bottom:4px; }
+.ms-poetique .t { font-family:'Italiana',serif; font-size:11px; line-height:1.35; margin-bottom:10px; }
+.ms-poetique .s { font-size:8px; font-weight:200; line-height:1.8; opacity:.7; }
+
+.ms-minimal { justify-content:center; align-items:center; text-align:center; background:#f8f6f0; }
+.ms-minimal .t { font-family:'Cormorant Garamond',serif; font-size:12px; font-style:italic; color:#1a1810; line-height:1.5; margin-bottom:18px; }
+.ms-minimal .dot { width:4px; height:4px; background:#c8a050; border-radius:50%; margin:0 auto; }
+
+.ms-retro { justify-content:center; background:#f0d060; }
+.ms-retro .t { font-family:'Playfair Display',serif; font-size:14px; font-weight:900; color:#3a1a00; line-height:1.15; margin-bottom:8px; }
+.ms-retro .t em { color:#c06010; font-style:italic; }
+.ms-retro .d { width:20px; height:2px; background:#c06010; margin-bottom:8px; }
+.ms-retro .s { font-size:8px; color:#3a1a00; opacity:.65; line-height:1.6; }
+
+/* BG */
+.bg-sunset { background:radial-gradient(ellipse at 50% 60%,rgba(240,160,40,.7) 0%,transparent 50%),linear-gradient(180deg,#1a0d00,#c05000,#ffd060); }
+.bg-night { background:radial-gradient(ellipse at 30% 40%,rgba(40,80,160,.6) 0%,transparent 45%),linear-gradient(180deg,#000308,#04102a); }
+.bg-rose { background:radial-gradient(ellipse at 50% 30%,rgba(180,60,80,.65) 0%,transparent 55%),linear-gradient(160deg,#0d0205,#c03050); }
+.ef-rose { background:radial-gradient(ellipse at 50% 30%,rgba(180,60,80,.6) 0%,transparent 55%),#0d0205; }
+.ef-lilas { background:radial-gradient(ellipse at 30% 20%,rgba(120,80,180,.55) 0%,transparent 55%),#050108; }
+.ef-ambre { background:radial-gradient(ellipse at 70% 40%,rgba(200,120,40,.5) 0%,transparent 55%),#080300; }
+.bf-gold { background:radial-gradient(ellipse at 50% 20%,rgba(220,170,30,.55) 0%,transparent 55%),#06040a; }
+.bf-red { background:radial-gradient(ellipse at 20% 10%,rgba(180,20,20,.55) 0%,transparent 55%),#080000; }
+.nf-cyan { background:#020010; }
+
+/* color overrides for elegant/bold/neon in mini preview */
+.ef-rose .ms-elegant,.ef-rose .ms-poetique { color:#f5c8d0; }
+.ef-rose .ms-elegant .g,.ef-rose .ms-poetique .g { color:#ff9aaa; }
+.ef-lilas .ms-elegant,.ef-lilas .ms-poetique { color:#e0cff5; }
+.ef-lilas .ms-elegant .g,.ef-lilas .ms-poetique .g { color:#c8a8ff; }
+.ef-ambre .ms-elegant,.ef-ambre .ms-poetique { color:#f5dfc0; }
+.ef-ambre .ms-elegant .g,.ef-ambre .ms-poetique .g { color:#ffbe70; }
+.bf-gold .ms-bold { color:#f5e090; }
+.bf-red .ms-bold { color:#f5cdc0; }
+.nf-cyan .ms-neon { color:#00ffee; }
+.ms-neon { justify-content:center; }
+.ms-neon .t { font-family:'Bebas Neue',sans-serif; font-size:26px; line-height:1; letter-spacing:2px; margin-bottom:10px; }
+.ms-neon .s { font-size:8px; line-height:1.8; opacity:.7; }
+.nf-cyan .ms-neon .t { text-shadow:0 0 12px #00ffee,0 0 24px #00ffee; }
+
+/* Preview apply btn */
+.preview-apply { padding:14px 18px; border-top:1px solid var(--border); }
+.preview-apply button { width:100%; background:var(--gold); border:none; border-radius:12px; padding:12px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:#0a0600; cursor:pointer; transition:background .2s; }
+.preview-apply button:hover { background:var(--gold-light); }
+
+/* Selected citation display in preview */
+.selected-cite-display { padding:14px 18px; border-bottom:1px solid var(--border); }
+.scd-label { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.scd-text { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:var(--cream); line-height:1.5; }
+.scd-empty { font-size:11px; color:var(--muted); font-style:italic; }
+
+/* ══ TOAST ══ */
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(60px); background:var(--gold); color:#0a0600; padding:10px 20px; border-radius:40px; font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; transition:transform .3s; pointer-events:none; z-index:200; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Mobile mood tabs */
+.mobile-mood-tabs { display:none; overflow-x:auto; scrollbar-width:none; padding:10px 16px; gap:8px; border-bottom:1px solid var(--border); }
+.mobile-mood-tabs::-webkit-scrollbar { display:none; }
+@media(max-width:900px){ .mobile-mood-tabs { display:flex; } }
+.mob-mood { border-radius:40px; padding:6px 14px; font-size:11px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--muted); cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all .15s; }
+.mob-mood.active { border-color:var(--gold); color:var(--gold); background:rgba(200,160,80,0.08); }
+
+/* Keyboard shortcut hint */
+.kb-hint { font-size:9px; color:var(--muted); letter-spacing:1px; padding:8px 24px; border-top:1px solid var(--border); opacity:.6; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ TOPBAR ══ -->
+  <div class="topbar">
+    <div class="logo">
+      <svg width="17" height="17" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="4" width="36" height="36" rx="4" stroke="#C8A050" stroke-width="1.8" fill="none"/>
+        <rect x="8.5" y="8.5" width="27" height="21" rx="2.5" fill="rgba(200,160,80,0.1)" stroke="#C8A050" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="22" cy="19" r="5.5" fill="none" stroke="#C8A050" stroke-width="1.8"/>
+        <line x1="22" y1="11" x2="22" y2="13" stroke="#C8A050" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="22" y1="25" x2="22" y2="27" stroke="#C8A050" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="14" y1="19" x2="16" y2="19" stroke="#C8A050" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="28" y1="19" x2="30" y2="19" stroke="#C8A050" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="12" y1="36" x2="32" y2="36" stroke="#C8A050" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <span><span class="mood">Mood</span>frame</span>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">Bibliothèque</span>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Chercher une citation…">
+      <button class="search-clear" id="searchClear">✕</button>
+    </div>
+    <div class="topbar-count" id="topbarCount">240 citations</div>
+  </div>
+
+  <!-- Mobile mood tabs -->
+  <div class="mobile-mood-tabs" id="mobileMoodTabs"></div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Mood</span>
+      <div class="mood-list" id="moodList"></div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Langue</span>
+      <div class="lang-pills">
+        <div class="lang-pill active" data-lang="all">Toutes</div>
+        <div class="lang-pill" data-lang="fr">FR</div>
+        <div class="lang-pill" data-lang="en">EN</div>
+        <div class="lang-pill" data-lang="ar">AR</div>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Tonalité</span>
+      <div class="tone-list" id="toneList"></div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Favoris</span>
+      <div class="mood-item" id="favFilter" style="cursor:pointer;">
+        <span class="mood-emoji">⭐</span>
+        <span class="mood-name">Mes favoris</span>
+        <span class="mood-count" id="favCount">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main" id="main">
+    <div class="mood-hero" id="moodHero">
+      <span class="mood-hero-emoji" id="heroEmoji">✦</span>
+      <div class="mood-hero-text">
+        <h2 id="heroTitle">Toutes les <em>citations</em></h2>
+        <p id="heroDesc">240 phrases · 12 moods · 3 langues</p>
+      </div>
+      <div class="mood-hero-actions">
+        <button class="btn-sm" id="shuffleBtn">↺ Aléatoire</button>
+      </div>
+    </div>
+
+    <div class="sort-bar">
+      <span class="sort-label">Trier</span>
+      <div class="sort-pills">
+        <div class="sort-pill active" data-sort="default">Défaut</div>
+        <div class="sort-pill" data-sort="alpha">A→Z</div>
+        <div class="sort-pill" data-sort="length">Court→Long</div>
+        <div class="sort-pill" data-sort="fav">Favoris</div>
+      </div>
+      <span class="result-count" id="resultCount">240 résultats</span>
+    </div>
+
+    <div class="cites-grid" id="citesGrid"></div>
+    <div class="kb-hint">Clic → sélectionner · ★ → favori · Utiliser → appliquer au statut</div>
+  </div>
+
+  <!-- ══ PREVIEW COLUMN ══ -->
+  <div class="preview-col">
+    <div class="preview-header">
+      <span class="preview-header-title">Aperçu style</span>
+    </div>
+    <div class="style-mini-scroll" id="styleMiniScroll"></div>
+    <div class="selected-cite-display">
+      <p class="scd-label">Citation sélectionnée</p>
+      <p class="scd-text scd-empty" id="scdText">Clique sur une citation pour prévisualiser</p>
+    </div>
+    <div class="preview-phone-wrap">
+      <div class="mini-phone">
+        <div class="mini-screen ms-grain ms-vignette bg-sunset" id="miniScreen">
+          <div class="ms-layer ms-elegant" id="miniLayer">
+            <p class="g" id="mini-g">Choisir</p>
+            <p class="t" id="mini-t">une citation pour la voir ici dans le style choisi.</p>
+            <p class="s" id="mini-s">✦</p>
+          </div>
+        </div>
+      </div>
+      <span class="preview-label">✦ Live preview</span>
+    </div>
+    <div class="preview-apply">
+      <button id="applyBtn">Utiliser cette citation →</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════
+   BASE DE DONNÉES — 240 CITATIONS
+══════════════════════════════════════════ */
+const DB = {
+  ambition: {
+    emoji:'🔥', label:'Ambition',
+    desc:'Discipline, succès, travail silencieux',
+    color:'#ff6040',
+    citations:[
+      { text:'Les gens voient le résultat. Jamais le prix.', sub:'Pendant qu\'ils commentaient, tu construisais.', tone:'fort', lang:'fr' },
+      { text:'Refuser est aussi une stratégie.', sub:'Tout ce à quoi tu dis oui remplace un autre oui.', tone:'fort', lang:'fr' },
+      { text:'La discipline est une décision que tu prends seul à 6h du matin.', sub:'Personne ne te regarde. C\'est justement le point.', tone:'fort', lang:'fr' },
+      { text:'Le succès est bruyant. Le chemin est silencieux.', sub:'Construis sans bruit. Livre en impact.', tone:'fort', lang:'fr' },
+      { text:'Tout le monde veut les résultats. Très peu veulent le processus.', sub:'C\'est là que la sélection se fait.', tone:'direct', lang:'fr' },
+      { text:'Ton seul concurrent, c\'est la version que tu aurais pu être hier.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Commence mal plutôt que de ne pas commencer.', sub:'La perfection est l\'ennemi du fait.', tone:'direct', lang:'fr' },
+      { text:'Ce que tu fais entre minuit et 6h du matin — c\'est là que ça se joue.', sub:'', tone:'fort', lang:'fr' },
+      { text:'La médiocrité est confortable. C\'est pour ça qu\'elle est si peuplée.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Il n\'y a pas de raccourci vers un endroit qui en vaut la peine.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Hard work beats talent when talent doesn\'t work hard.', sub:'', tone:'fort', lang:'en' },
+      { text:'The secret is there is no secret. Just show up every day.', sub:'', tone:'direct', lang:'en' },
+      { text:'Don\'t wish it were easier. Wish you were better.', sub:'', tone:'fort', lang:'en' },
+      { text:'اعمل في صمت، دع نجاحك يتحدث عنك.', sub:'', tone:'fort', lang:'ar' },
+      { text:'النجاح ليس نهاية الطريق، بل بداية مسؤولية أكبر.', sub:'', tone:'direct', lang:'ar' },
+      { text:'كل يوم هو فرصة لتكون أفضل مما كنت عليه أمس.', sub:'', tone:'doux', lang:'ar' },
+      { text:'L\'intention sans action est un rêve. L\'action sans intention est un chaos.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Personne ne se souvient de celui qui a failli gagner.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Construit en silence. Livreras en bruit.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Le talent frappe une fois. Le travail frappe mille fois.', sub:'', tone:'fort', lang:'fr' },
+    ]
+  },
+  amour: {
+    emoji:'💛', label:'Amour',
+    desc:'Relations, attachement, partir ou rester',
+    color:'#e0806080',
+    citations:[
+      { text:'S\'oublier pour garder quelqu\'un, c\'est perdre deux personnes.', sub:'Toi. Et la version de toi que tu aurais pu être.', tone:'fort', lang:'fr' },
+      { text:'Partir n\'est pas toujours abandonner. C\'est parfois se choisir.', sub:'Les histoires qui finissent t\'apprennent autant.', tone:'doux', lang:'fr' },
+      { text:'Un amour qui te rétrécit n\'est pas un amour.', sub:'C\'est une cage confortable.', tone:'direct', lang:'fr' },
+      { text:'Rester par peur de la solitude est la pire façon d\'être seul.', sub:'Mieux vaut être seul et entier.', tone:'direct', lang:'fr' },
+      { text:'On n\'aime pas quelqu\'un pour ce qu\'il est. On l\'aime pour ce qu\'on devient avec lui.', sub:'', tone:'doux', lang:'fr' },
+      { text:'L\'amour qui ne te laisse pas grandir est une prison dorée.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Tu mérites quelqu\'un qui ne te fait pas douter de ta valeur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Le vrai amour ne diminue pas. Il amplifie.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Certaines personnes entrent dans ta vie pour rester. D\'autres pour t\'enseigner.', sub:'Les deux sont précieuses.', tone:'doux', lang:'fr' },
+      { text:'Aimer quelqu\'un, c\'est lui souhaiter d\'être libre — même de toi.', sub:'', tone:'doux', lang:'fr' },
+      { text:'The people who are meant to stay will always find a way back.', sub:'', tone:'doux', lang:'en' },
+      { text:'You deserve love that doesn\'t ask you to shrink.', sub:'', tone:'doux', lang:'en' },
+      { text:'Not every goodbye is a loss. Some are a release.', sub:'', tone:'direct', lang:'en' },
+      { text:'الحب الحقيقي يجعلك أفضل نسخة من نفسك.', sub:'', tone:'doux', lang:'ar' },
+      { text:'ليس كل من غادر خسارة، وليس كل من بقي نعمة.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Il n\'y a pas de départ douloureux sans une arrivée qui en valait la peine.', sub:'', tone:'doux', lang:'fr' },
+      { text:'On ne perd pas quelqu\'un qu\'on n\'avait jamais vraiment eu.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Le manque est une forme d\'amour qui survit au temps.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Quelqu\'un qui t\'aime vraiment ne t\'oblige jamais à choisir entre toi et lui.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Love is not about finding the right person. It\'s about becoming the right person.', sub:'', tone:'direct', lang:'en' },
+    ]
+  },
+  paix: {
+    emoji:'🍃', label:'Paix',
+    desc:'Lâcher prise, sérénité, acceptation',
+    color:'#60c080',
+    citations:[
+      { text:'Ce qui n\'est pas fait pour toi te décevra mille fois.', sub:'La douleur répétée est une leçon.', tone:'direct', lang:'fr' },
+      { text:'Lâcher prise ne veut pas dire abandonner. Ça veut dire avancer.', sub:'Sans le poids de ce qui ne t\'appartient plus.', tone:'doux', lang:'fr' },
+      { text:'La paix n\'est pas l\'absence de problèmes. C\'est la capacité à les traverser.', sub:'Sereinement.', tone:'doux', lang:'fr' },
+      { text:'Tu n\'as pas à tout expliquer. Tu as juste à continuer.', sub:'Le chemin se construit en marchant.', tone:'doux', lang:'fr' },
+      { text:'Certaines batailles se gagnent en les quittant.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Le repos n\'est pas une récompense. C\'est une nécessité.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tout ce que tu tentes de contrôler te contrôle.', sub:'', tone:'direct', lang:'fr' },
+      { text:'La sérénité n\'est pas d\'éviter la tempête. C\'est d\'apprendre à danser sous la pluie.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tu peux être en paix sans que tout soit réglé.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Parfois la meilleure réponse est le silence.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Peace is not the absence of conflict, but the ability to handle it with grace.', sub:'', tone:'doux', lang:'en' },
+      { text:'Let go of what no longer serves your growth.', sub:'', tone:'direct', lang:'en' },
+      { text:'السلام الداخلي لا يأتي من الخارج.', sub:'', tone:'doux', lang:'ar' },
+      { text:'ما لا تستطيع تغييره، تعلم كيف تحمله.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Accepter n\'est pas se résigner. C\'est choisir où mettre ton énergie.', sub:'', tone:'direct', lang:'fr' },
+      { text:'La tranquillité d\'esprit est le plus grand luxe.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce n\'est pas le poids qui t\'écrase. C\'est la façon dont tu le portes.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ralentis. Tu n\'es pas en retard. Tu recalibres.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tout ce qui est urgent n\'est pas important. Tout ce qui est important n\'est pas urgent.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Find peace in the process, not just the destination.', sub:'', tone:'doux', lang:'en' },
+    ]
+  },
+  solitude: {
+    emoji:'🌙', label:'Solitude',
+    desc:'Introspection, 3h du matin, présence à soi',
+    color:'#8080c0',
+    citations:[
+      { text:'J\'ai appris plus la nuit que le jour.', sub:'Le silence parle quand tout le monde dort.', tone:'doux', lang:'fr' },
+      { text:'Être seul n\'est pas une punition. C\'est parfois la seule façon de s\'entendre.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce que tu fais quand personne ne regarde — c\'est ça qui te définit.', sub:'Le caractère se forme dans l\'ombre.', tone:'direct', lang:'fr' },
+      { text:'Certains jours t\'apprennent rien. D\'autres te changent sans prévenir.', sub:'', tone:'doux', lang:'fr' },
+      { text:'3h du matin a une honnêteté que personne d\'autre n\'a.', sub:'', tone:'fort', lang:'fr' },
+      { text:'La solitude peuplée de soi-même n\'est pas la solitude.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il y a une différence entre être seul et se sentir seul.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Apprends à apprécier ta propre compagnie. C\'est une relation pour la vie.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Les meilleures conversations que j\'ai eues, c\'était avec moi-même à 3h du matin.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Dans le silence, tout devient plus clair. Même les questions sans réponse.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Solitude is where I place my chaos to rest.', sub:'', tone:'doux', lang:'en' },
+      { text:'The quieter you become, the more you can hear.', sub:'', tone:'doux', lang:'en' },
+      { text:'Not all who wander are lost. Some are just listening.', sub:'', tone:'doux', lang:'en' },
+      { text:'في الصمت تسمع ما يقوله قلبك بصدق.', sub:'', tone:'doux', lang:'ar' },
+      { text:'الوحدة ليست عقوبة، بل فرصة للقاء نفسك.', sub:'', tone:'doux', lang:'ar' },
+      { text:'Les murs de ta chambre en savent plus sur toi que n\'importe qui.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tout le monde a besoin d\'un endroit où personne ne le cherche.', sub:'', tone:'doux', lang:'fr' },
+      { text:'La nuit efface les apparences. Reste juste ce qui est réel.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tu es la seule personne avec qui tu passeras toute ta vie.', sub:'Apprends à aimer cette compagnie.', tone:'direct', lang:'fr' },
+      { text:'Some of the most powerful moments happen in complete silence.', sub:'', tone:'doux', lang:'en' },
+    ]
+  },
+  growth: {
+    emoji:'📈', label:'Growth',
+    desc:'Évolution, résilience, recommencer',
+    color:'#50b0e0',
+    citations:[
+      { text:'Tu n\'es pas en retard. Tu es exactement là où tu devais être.', sub:'Compare ton chapitre 3 à ton propre chapitre 1.', tone:'doux', lang:'fr' },
+      { text:'La croissance ne fait pas de bruit. Elle se voit plus tard.', sub:'Pousse vers la lumière même quand le sol est sec.', tone:'doux', lang:'fr' },
+      { text:'Recommencer n\'est pas échouer. C\'est recalibrer.', sub:'Les meilleurs savent pivoter.', tone:'direct', lang:'fr' },
+      { text:'Ce qui te brise pas te rend plus précis.', sub:'Chaque friction polit.', tone:'direct', lang:'fr' },
+      { text:'L\'erreur est une donnée. Pas une identité.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Tu n\'es pas la même personne qu\'il y a un an. C\'est une victoire.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Le progrès invisible est quand même du progrès.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Chaque version de toi était nécessaire pour arriver à cette version.', sub:'', tone:'doux', lang:'fr' },
+      { text:'La vie ne devient pas plus facile. Tu deviens plus fort.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Le meilleur investissement que tu feras jamais, c\'est en toi.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Growth is uncomfortable. That\'s how you know it\'s working.', sub:'', tone:'direct', lang:'en' },
+      { text:'You are allowed to be both a masterpiece and a work in progress.', sub:'', tone:'doux', lang:'en' },
+      { text:'Every expert was once a beginner who refused to quit.', sub:'', tone:'fort', lang:'en' },
+      { text:'النمو لا يُسمع صوته، لكن يُرى أثره.', sub:'', tone:'doux', lang:'ar' },
+      { text:'كل تجربة صعبة هي درس يُعيد تشكيلك.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Ce que tu fuis te suit. Ce que tu affrontes te libère.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Les grandes transformations commencent par de petites décisions quotidiennes.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Un an de discipline changera ta vie plus que dix ans de bonne intention.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ce n\'est pas la chute qui compte. C\'est combien de fois tu te relèves.', sub:'', tone:'doux', lang:'fr' },
+      { text:'The only bad workout is the one that didn\'t happen.', sub:'', tone:'direct', lang:'en' },
+    ]
+  },
+  nostalgie: {
+    emoji:'📷', label:'Nostalgie',
+    desc:'Mémoire, instants, ce qui reste',
+    color:'#c08040',
+    citations:[
+      { text:'Il y a des instants qui durent plus longtemps que le temps lui-même.', sub:'Quelque part. Un jour. Tu t\'en souviens.', tone:'doux', lang:'fr' },
+      { text:'Certaines photos capturent plus qu\'un moment. Elles capturent qui tu étais.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Se perdre était la seule façon de se trouver.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il y a des gens qui disparaissent mais qui ne partent jamais vraiment.', sub:'Ils restent dans la façon dont tu vois les choses.', tone:'doux', lang:'fr' },
+      { text:'Les meilleurs souvenirs ont une odeur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Certains endroits t\'appartiennent même après que tu les aies quittés.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Le passé ne revient pas. Mais il reste, quelque part en toi.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Une chanson peut te ramener dans un endroit où tu n\'es plus depuis des années.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Les photos que tu n\'as pas prises sont souvent les plus belles.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Souviens-toi de qui tu étais avant que le monde te change.', sub:'', tone:'direct', lang:'fr' },
+      { text:'The past is never where you think you left it.', sub:'', tone:'doux', lang:'en' },
+      { text:'Some memories are too precious to be forgotten. They become part of who you are.', sub:'', tone:'doux', lang:'en' },
+      { text:'What we had was real. Even if it\'s over.', sub:'', tone:'doux', lang:'en' },
+      { text:'بعض الذكريات تبقى حية في داخلنا أكثر من الحاضر.', sub:'', tone:'doux', lang:'ar' },
+      { text:'هناك أماكن لم تغادرها حقاً، حتى وإن رحلت.', sub:'', tone:'doux', lang:'ar' },
+      { text:'Le temps passe. Certaines personnes restent dans une version de toi.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il y a une douceur dans le souvenir de ce qu\'on ne peut pas retrouver.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Les étés d\'enfance durent plus longtemps dans la mémoire que dans le calendrier.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Nostalgia is a longing for a version of yourself that no longer exists.', sub:'', tone:'direct', lang:'en' },
+      { text:'Garde les photos. Oublie les rancœurs. Souviens-toi des sensations.', sub:'', tone:'doux', lang:'fr' },
+    ]
+  },
+  force: {
+    emoji:'⚡', label:'Force',
+    desc:'Résilience, courage, ne pas lâcher',
+    color:'#e0c040',
+    citations:[
+      { text:'Silence & travail. Les résultats parleront pour toi.', sub:'Bientôt.', tone:'fort', lang:'fr' },
+      { text:'Tu as déjà surmonté des choses qui semblaient impossibles.', sub:'Rappelle-t\'en.', tone:'doux', lang:'fr' },
+      { text:'Ne lâche pas. Tu es plus fort que ce que tu penses.', sub:'Pour de vrai.', tone:'fort', lang:'fr' },
+      { text:'Reste dans ton lane. Le focus vient de toi.', sub:'Les distractions viennent toujours de l\'extérieur.', tone:'fort', lang:'fr' },
+      { text:'Le courage n\'est pas l\'absence de peur. C\'est décider que quelque chose est plus important que la peur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tu n\'as pas besoin de leur approbation pour avancer.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ce qui te tente d\'arrêter est exactement la raison de continuer.', sub:'', tone:'fort', lang:'fr' },
+      { text:'La force n\'est pas de ne jamais tomber. C\'est de se relever à chaque fois.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tout ce que tu as traversé t\'a préparé pour ce que tu traverses maintenant.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Les gens les plus forts sont ceux qui ont choisi d\'avancer malgré la douleur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'When it feels too hard, remember why you started.', sub:'', tone:'doux', lang:'en' },
+      { text:'You survived 100% of your worst days. That\'s not nothing.', sub:'', tone:'direct', lang:'en' },
+      { text:'Strength is not about never breaking. It\'s about knowing you\'ll rebuild.', sub:'', tone:'doux', lang:'en' },
+      { text:'القوة ليست في عدم السقوط، بل في القدرة على النهوض من جديد.', sub:'', tone:'doux', lang:'ar' },
+      { text:'أنت أقوى مما تظن في أصعب اللحظات.', sub:'', tone:'fort', lang:'ar' },
+      { text:'L\'adversité révèle ce que la prospérité cache.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Un guerrier n\'est pas celui qui ne ressent pas la peur. C\'est celui qui avance malgré elle.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ce que tu portes en silence est aussi ta force.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Le feu qui te brûle peut aussi être celui qui t\'affine.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Fall seven times. Stand up eight.', sub:'', tone:'fort', lang:'en' },
+    ]
+  },
+  douceur: {
+    emoji:'🌸', label:'Douceur',
+    desc:'Bienveillance, guérison, être doux avec soi',
+    color:'#e080c0',
+    citations:[
+      { text:'Il y a des jours qui t\'apprennent à être doux avec toi-même.', sub:'La guérison n\'est pas linéaire.', tone:'doux', lang:'fr' },
+      { text:'Tu mérites la même gentillesse que tu offres aux autres.', sub:'Commence par toi.', tone:'doux', lang:'fr' },
+      { text:'Le repos n\'est pas une récompense. C\'est une nécessité.', sub:'Ralentis. Respire. Tu avances déjà.', tone:'doux', lang:'fr' },
+      { text:'Accepter de ne pas avoir de réponse aujourd\'hui — c\'est parfaitement acceptable.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tu n\'as pas à être productif pour avoir de la valeur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Prendre soin de soi n\'est pas de l\'égoïsme. C\'est de la survie.', sub:'', tone:'direct', lang:'fr' },
+      { text:'La guérison n\'a pas de calendrier.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il n\'y a pas de mauvaise façon de survivre.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Sois le meilleur ami que tu n\'as jamais eu.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce que tu traverses est difficile. Et tu le traverses quand même.', sub:'', tone:'doux', lang:'fr' },
+      { text:'You are allowed to take up space.', sub:'', tone:'doux', lang:'en' },
+      { text:'Healing is not linear. Some days you go backwards and that\'s okay.', sub:'', tone:'doux', lang:'en' },
+      { text:'Be gentle with yourself. You are a child of the universe.', sub:'', tone:'doux', lang:'en' },
+      { text:'كن لطيفاً مع نفسك، فأنت تحاول في عالم صعب.', sub:'', tone:'doux', lang:'ar' },
+      { text:'الاعتناء بنفسك ليس أنانية، بل ضرورة للبقاء.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Tu as le droit de changer d\'avis. De changer de direction. De changer.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Certains jours, survivre est suffisant.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce n\'est pas la force qui te manque. C\'est peut-être juste le repos.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Tu fais de ton mieux avec ce que tu as. C\'est assez.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Rest is productive. Stillness is strength.', sub:'', tone:'doux', lang:'en' },
+    ]
+  },
+  gratitude: {
+    emoji:'🙏', label:'Gratitude',
+    desc:'Apprécier, compter ses blessings, présent',
+    color:'#80c080',
+    citations:[
+      { text:'La gratitude ne change pas ce que tu as. Elle change comment tu le vois.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Quelque part, quelqu\'un rêve de ce que tu tiens pour acquis.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Les petites choses sont les grandes choses déguisées.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Chaque matin est une chance que beaucoup n\'ont pas.', sub:'', tone:'direct', lang:'fr' },
+      { text:'La richesse la plus rare n\'est pas dans les comptes. C\'est dans les moments.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Remercie même les difficultés. Elles t\'ont façonné.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ce que tu as aujourd\'hui était un jour ce que tu espérais.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Gratitude turns what we have into enough.', sub:'', tone:'doux', lang:'en' },
+      { text:'Count your blessings, not your problems.', sub:'', tone:'direct', lang:'en' },
+      { text:'The present moment always will have been.', sub:'', tone:'doux', lang:'en' },
+      { text:'الشكر يفتح أبواباً لم تكن تعلم بوجودها.', sub:'', tone:'doux', lang:'ar' },
+      { text:'من لا يشكر الناس لا يشكر الله.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Apprécie maintenant. Le moment présent deviendra un jour la nostalgie.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Vivre est un privilège. Vivre pleinement est une responsabilité.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Il y a une beauté dans les choses ordinaires que l\'on ne voit qu\'après les avoir perdues.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Happiness is not having what you want. It\'s wanting what you have.', sub:'', tone:'doux', lang:'en' },
+      { text:'Every sunset is a reminder that endings can be beautiful.', sub:'', tone:'doux', lang:'en' },
+      { text:'Ce n\'est pas le bonheur qui crée la gratitude. C\'est la gratitude qui crée le bonheur.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Dis merci plus souvent. En silence aussi.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Even in difficulty, there is something to learn. Even in loss, something remains.', sub:'', tone:'doux', lang:'en' },
+    ]
+  },
+  liberte: {
+    emoji:'🦋', label:'Liberté',
+    desc:'S\'affranchir, authenticité, ne plus se cacher',
+    color:'#60b0e0',
+    citations:[
+      { text:'La liberté la plus profonde est de ne plus chercher l\'approbation.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ce que les autres pensent de toi ne te concerne pas.', sub:'Sauf si tu en fais un problème.', tone:'direct', lang:'fr' },
+      { text:'Le jour où tu t\'acceptes, les autres n\'ont plus de pouvoir sur toi.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Tu n\'as pas à rentrer dans leur moule. Tu peux en créer un autre.', sub:'', tone:'fort', lang:'fr' },
+      { text:'L\'authenticité coûte cher. La compromission coûte plus.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Libère-toi de qui tu crois devoir être. Deviens qui tu es.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ne cours pas après ceux qui ne t\'ont pas choisi. Choisis-toi.', sub:'', tone:'fort', lang:'fr' },
+      { text:'The most courageous act is to be yourself in a world that wants you to be something else.', sub:'', tone:'fort', lang:'en' },
+      { text:'Freedom is not doing whatever you want. It\'s not being owned by your fears.', sub:'', tone:'direct', lang:'en' },
+      { text:'You owe the world your authenticity. Not your performance.', sub:'', tone:'fort', lang:'en' },
+      { text:'الحرية الحقيقية تبدأ من الداخل.', sub:'', tone:'doux', lang:'ar' },
+      { text:'لا تكن نسخة ضعيفة من شخص آخر، كن النسخة الأصيلة منك.', sub:'', tone:'fort', lang:'ar' },
+      { text:'Tu n\'as rien à prouver à ceux qui ne te comprennent pas.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ce n\'est pas de l\'arrogance que de se connaître. C\'est une nécessité.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Arrête de t\'excuser d\'exister.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Your story doesn\'t need anyone\'s permission to be told.', sub:'', tone:'fort', lang:'en' },
+      { text:'Break the rules that were made for someone else.', sub:'', tone:'fort', lang:'en' },
+      { text:'La comparaison est le vol de la joie.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ce que tu es est suffisant. Maintenant. Pas après avoir changé.', sub:'', tone:'doux', lang:'fr' },
+      { text:'In a world that profits from your self-doubt, loving yourself is resistance.', sub:'', tone:'fort', lang:'en' },
+    ]
+  },
+  spiritualite: {
+    emoji:'✨', label:'Spiritualité',
+    desc:'Foi, univers, sens profond, confiance',
+    color:'#a080e0',
+    citations:[
+      { text:'Tu es fait de la même matière que les étoiles. Agis en conséquence.', sub:'L\'univers ne se trompe jamais de timing.', tone:'doux', lang:'fr' },
+      { text:'Tout arrive au bon moment. Même ce qui semble tard.', sub:'', tone:'doux', lang:'fr' },
+      { text:'La foi n\'est pas de ne pas douter. C\'est de continuer malgré le doute.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce qui t\'est destiné ne te dépassera jamais.', sub:'', tone:'doux', lang:'fr' },
+      { text:'L\'univers conspire toujours en faveur de celui qui cherche vraiment.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Fais confiance au chemin même quand tu ne vois pas la destination.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il y a une intelligence dans l\'ordre des choses que l\'on ne comprend qu\'après.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Trust the timing of your life.', sub:'', tone:'doux', lang:'en' },
+      { text:'Everything that\'s meant to be yours is already on its way.', sub:'', tone:'doux', lang:'en' },
+      { text:'The universe doesn\'t make mistakes. Only detours.', sub:'', tone:'doux', lang:'en' },
+      { text:'ما قُدِّر لك لن يفوتك، وما لم يُقدَّر لك لن يصلك.', sub:'', tone:'doux', lang:'ar' },
+      { text:'التوكل لا يعني الجلوس، بل المضي قدماً مع الثقة.', sub:'', tone:'direct', lang:'ar' },
+      { text:'توكل على الله ثم اعمل، فالنتائج ليست في يدك.', sub:'', tone:'doux', lang:'ar' },
+      { text:'Ce que Dieu t\'a pris, Il te le remplacera par quelque chose de meilleur.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Derrière chaque épreuve, il y a une leçon que nulle autre école n\'enseigne.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Surrender to what is. Let go of what was. Have faith in what will be.', sub:'', tone:'doux', lang:'en' },
+      { text:'Not all prayers are answered immediately. Some are answered in disguise.', sub:'', tone:'doux', lang:'en' },
+      { text:'Le silence est parfois la réponse la plus divine.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Il n\'y a pas de hasard. Seulement des rendez-vous.', sub:'', tone:'doux', lang:'fr' },
+      { text:'حسبي الله ونعم الوكيل.', sub:'', tone:'fort', lang:'ar' },
+    ]
+  },
+  audace: {
+    emoji:'🚀', label:'Audace',
+    desc:'Prendre des risques, oser, changer de vie',
+    color:'#ff8040',
+    citations:[
+      { text:'Le risque le plus grand, c\'est de ne prendre aucun risque.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Dans cinq ans, tu regretteras plus ce que tu n\'as pas fait que ce que tu as fait.', sub:'', tone:'direct', lang:'fr' },
+      { text:'L\'opportunité ne frappe pas deux fois. Mais tu peux aller la chercher.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Le confort est le plus grand ennemi du potentiel.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Si tu attends d\'être prêt, tu attendras toujours.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ce qui te fait peur te montre exactement vers quoi aller.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Lance d\'abord. Peaufine en route.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Le non que tu n\'as pas demandé est toujours un non.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ose être différent dans un monde qui récompense la conformité.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Le pire qui puisse arriver, c\'est d\'avoir essayé.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Jump and build your wings on the way down.', sub:'', tone:'fort', lang:'en' },
+      { text:'Do it scared. Do it imperfect. Just do it.', sub:'', tone:'fort', lang:'en' },
+      { text:'Comfort zones are beautiful places, but nothing grows there.', sub:'', tone:'direct', lang:'en' },
+      { text:'الشجاعة ليست غياب الخوف، بل المضي قدماً رغمه.', sub:'', tone:'fort', lang:'ar' },
+      { text:'من لا يجرب لا يتعلم، ومن لا يتعلم لا يتقدم.', sub:'', tone:'direct', lang:'ar' },
+      { text:'Une vie trop prudente est une vie à moitié vécue.', sub:'', tone:'direct', lang:'fr' },
+      { text:'Ceux qui ont changé le monde n\'ont pas demandé la permission.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Fais le premier pas. L\'escalier apparaîtra.', sub:'', tone:'doux', lang:'fr' },
+      { text:'Ce n\'est pas le saut qui est dangereux. C\'est l\'immobilité.', sub:'', tone:'fort', lang:'fr' },
+      { text:'Ship it. Then make it perfect.', sub:'', tone:'fort', lang:'en' },
+    ]
+  },
+};
+
+/* ══ CONFIG STYLES PREVIEW ══ */
+const PREVIEW_STYLES = [
+  { id:'elegant', label:'Élégant', bg:'ef-rose', grain:true, vig:true,
+    render: c => `<div class="ms-layer ms-elegant"><p class="g">${firstWord(c.text)}</p><p class="t">${c.text}</p><p class="s">${c.sub||'✦'}</p></div>` },
+  { id:'poetique', label:'Poétique', bg:'ef-lilas', grain:true, vig:true,
+    render: c => `<div class="ms-layer ms-poetique"><p class="g">✦</p><p class="t">${c.text}</p><p class="s">${c.sub||''}</p></div>` },
+  { id:'bold', label:'Bold', bg:'bf-gold', grain:true, vig:true,
+    render: c => `<div class="ms-layer ms-bold"><p class="t">${c.text.toUpperCase().substring(0,40)}<em>${c.sub||''}</em></p></div>` },
+  { id:'typo', label:'Typo', bg:'', grain:false, vig:false,
+    render: c => `<div class="ms-layer ms-typo"><p class="t">${c.text}</p><div class="d"></div><p class="s">${c.sub||''}</p></div>` },
+  { id:'minimal', label:'Minimal', bg:'', grain:false, vig:false,
+    render: c => `<div class="ms-layer ms-minimal"><p class="t">« ${c.text} »</p><div class="dot"></div></div>` },
+  { id:'retro', label:'Rétro', bg:'', grain:false, vig:false,
+    render: c => `<div class="ms-layer ms-retro"><p class="t">${c.text.substring(0,40)} <em>${c.sub||''}</em></p><div class="d"></div></div>` },
+];
+
+const TONE_CONFIG = {
+  fort:   { label:'Fort & Percutant',  color:'#e05040' },
+  direct: { label:'Direct & Honnête',  color:'#e0a040' },
+  doux:   { label:'Doux & Inspirant',  color:'#50c080' },
+};
+
+/* ══ STATE ══ */
+let state = {
+  mood: 'all', lang: 'all', tone: 'all',
+  sort: 'default', search: '',
+  selectedCite: null, favStyle: 0,
+  favs: new Set(JSON.parse(localStorage.getItem('mf_favs') || '[]')),
+  showFavOnly: false,
+};
+
+function saveFavs() {
+  localStorage.setItem('mf_favs', JSON.stringify([...state.favs]));
+}
+
+/* ══ BUILD SIDEBAR MOOD LIST ══ */
+function buildSidebar() {
+  const list = document.getElementById('moodList');
+  list.innerHTML = '';
+  // All option
+  const allItem = document.createElement('div');
+  allItem.className = 'mood-item' + (state.mood === 'all' ? ' active' : '');
+  allItem.innerHTML = `<span class="mood-emoji">🌐</span><span class="mood-name">Toutes</span><span class="mood-count">${countAll()}</span>`;
+  allItem.addEventListener('click', () => { state.mood = 'all'; state.showFavOnly = false; render(); });
+  list.appendChild(allItem);
+
+  Object.entries(DB).forEach(([key, mood]) => {
+    const cnt = mood.citations.length;
+    const el = document.createElement('div');
+    el.className = 'mood-item' + (state.mood === key ? ' active' : '');
+    el.innerHTML = `<span class="mood-emoji">${mood.emoji}</span><span class="mood-name">${mood.label}</span><span class="mood-count">${cnt}</span>`;
+    el.addEventListener('click', () => { state.mood = key; state.showFavOnly = false; render(); });
+    list.appendChild(el);
+  });
+
+  // Mobile tabs
+  const mobTabs = document.getElementById('mobileMoodTabs');
+  mobTabs.innerHTML = '';
+  [{key:'all',emoji:'🌐',label:'Toutes'},...Object.entries(DB).map(([k,v])=>({key:k,emoji:v.emoji,label:v.label}))].forEach(m => {
+    const el = document.createElement('div');
+    el.className = 'mob-mood' + (state.mood === m.key ? ' active' : '');
+    el.textContent = m.emoji + ' ' + m.label;
+    el.addEventListener('click', () => { state.mood = m.key; state.showFavOnly = false; render(); });
+    mobTabs.appendChild(el);
+  });
+
+  // Tone list
+  const toneList = document.getElementById('toneList');
+  toneList.innerHTML = `<div class="tone-item${state.tone==='all'?' active':''}" data-tone="all"><span class="tone-dot" style="background:var(--border);"></span>Toutes</div>`;
+  Object.entries(TONE_CONFIG).forEach(([key, t]) => {
+    const el = document.createElement('div');
+    el.className = 'tone-item' + (state.tone === key ? ' active' : '');
+    el.innerHTML = `<span class="tone-dot" style="background:${t.color};"></span>${t.label}`;
+    el.dataset.tone = key;
+    toneList.appendChild(el);
+  });
+  toneList.querySelectorAll('.tone-item').forEach(el => {
+    el.addEventListener('click', () => { state.tone = el.dataset.tone; render(); });
+  });
+
+  // Lang pills
+  document.querySelectorAll('.lang-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.lang === state.lang);
+    p.addEventListener('click', () => { state.lang = p.dataset.lang; render(); });
+  });
+
+  // Fav filter
+  document.getElementById('favCount').textContent = state.favs.size;
+  document.getElementById('favFilter').className = 'mood-item' + (state.showFavOnly ? ' active' : '');
+  document.getElementById('favFilter').onclick = () => { state.showFavOnly = !state.showFavOnly; state.mood = 'all'; render(); };
+}
+
+function countAll() { return Object.values(DB).reduce((a,m) => a + m.citations.length, 0); }
+
+/* ══ FILTER & SORT ══ */
+function getFiltered() {
+  let pool = [];
+  if (state.mood === 'all') {
+    Object.entries(DB).forEach(([key, m]) => m.citations.forEach(c => pool.push({ ...c, mood: key })));
+  } else {
+    (DB[state.mood]?.citations || []).forEach(c => pool.push({ ...c, mood: state.mood }));
+  }
+  if (state.lang !== 'all')     pool = pool.filter(c => c.lang === state.lang);
+  if (state.tone !== 'all')     pool = pool.filter(c => c.tone === state.tone);
+  if (state.showFavOnly)        pool = pool.filter(c => state.favs.has(c.text));
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    pool = pool.filter(c => c.text.toLowerCase().includes(q) || (c.sub||'').toLowerCase().includes(q));
+  }
+  // Sort
+  if (state.sort === 'alpha')  pool.sort((a,b) => a.text.localeCompare(b.text));
+  if (state.sort === 'length') pool.sort((a,b) => a.text.length - b.text.length);
+  if (state.sort === 'fav')    pool.sort((a,b) => (state.favs.has(b.text) ? 1 : 0) - (state.favs.has(a.text) ? 1 : 0));
+  return pool;
+}
+
+/* ══ RENDER ══ */
+function render() {
+  buildSidebar();
+  const filtered = getFiltered();
+
+  // Hero
+  const moodData = DB[state.mood];
+  document.getElementById('heroEmoji').textContent  = state.showFavOnly ? '⭐' : (moodData?.emoji || '✦');
+  document.getElementById('heroTitle').innerHTML    = state.showFavOnly ? 'Mes <em>favoris</em>' : (moodData ? `${moodData.label}` : 'Toutes les <em>citations</em>');
+  document.getElementById('heroDesc').textContent   = `${filtered.length} citation${filtered.length > 1 ? 's' : ''} · ${state.search ? 'Recherche active' : (moodData?.desc || '12 moods · 3 langues')}`;
+  document.getElementById('resultCount').textContent = `${filtered.length} résultat${filtered.length>1?'s':''}`;
+  document.getElementById('topbarCount').textContent = `${countAll()} citations`;
+
+  // Grid
+  const grid = document.getElementById('citesGrid');
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="e-icon">🔍</div><h3>Aucun résultat</h3><p>Essaie d'ajuster les filtres<br>ou d'effacer la recherche.</p></div>`;
+    return;
+  }
+
+  filtered.forEach(c => {
+    const isFav = state.favs.has(c.text);
+    const isSelected = state.selectedCite?.text === c.text;
+    const moodInfo = DB[c.mood];
+    const card = document.createElement('div');
+    card.className = 'cite-card' + (isSelected ? ' selected' : '');
+    card.innerHTML = `
+      <button class="cite-fav ${isFav ? 'active' : ''}" title="Favori">★</button>
+      <p class="cite-main">${c.text}</p>
+      ${c.sub ? `<p class="cite-sub">${c.sub}</p>` : ''}
+      <div class="cite-footer">
+        ${moodInfo ? `<span class="cite-tag">${moodInfo.emoji} ${moodInfo.label}</span>` : ''}
+        <span class="cite-lang">${c.lang.toUpperCase()}</span>
+        <span class="cite-tone-dot" style="background:${TONE_CONFIG[c.tone]?.color||'#888'};"></span>
+        <div class="cite-actions">
+          <button class="cite-action-btn copy">Copier</button>
+          <button class="cite-action-btn use">Utiliser →</button>
+        </div>
+      </div>`;
+
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cite-fav')) {
+        toggleFav(c, card.querySelector('.cite-fav'));
+        return;
+      }
+      if (e.target.classList.contains('copy')) {
+        navigator.clipboard?.writeText(c.text + (c.sub ? ' ' + c.sub : ''));
+        showToast('Copié ✓');
+        return;
+      }
+      if (e.target.classList.contains('use')) {
+        applyCite(c);
+        return;
+      }
+      selectCite(c);
+    });
+    grid.appendChild(card);
+  });
+}
+
+function toggleFav(c, btn) {
+  if (state.favs.has(c.text)) {
+    state.favs.delete(c.text);
+    btn.classList.remove('active');
+  } else {
+    state.favs.add(c.text);
+    btn.classList.add('active');
+  }
+  saveFavs();
+  document.getElementById('favCount').textContent = state.favs.size;
+}
+
+function selectCite(c) {
+  state.selectedCite = c;
+  render();
+  updatePreview(c);
+  // SCD
+  document.getElementById('scdText').innerHTML = `« ${c.text} »`;
+  document.getElementById('scdText').classList.remove('scd-empty');
+}
+
+function applyCite(c) {
+  showToast('Citation copiée — colle-la dans l\'app ✓');
+  navigator.clipboard?.writeText(c.text + (c.sub ? '\n' + c.sub : ''));
+}
+
+/* ══ PREVIEW ══ */
+let curPreviewStyle = 0;
+function buildStyleMini() {
+  const sc = document.getElementById('styleMiniScroll');
+  sc.innerHTML = '';
+  PREVIEW_STYLES.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'style-mini' + (i === 0 ? ' active' : '');
+    el.textContent = s.label;
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.style-mini').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      curPreviewStyle = i;
+      if (state.selectedCite) updatePreview(state.selectedCite);
+    });
+    sc.appendChild(el);
+  });
+}
+
+function updatePreview(c) {
+  const s = PREVIEW_STYLES[curPreviewStyle];
+  const ms = document.getElementById('miniScreen');
+  // BG
+  ['ef-rose','ef-lilas','ef-ambre','bf-gold','bf-red','nf-cyan','bg-sunset','bg-night'].forEach(b => ms.classList.remove(b));
+  if (s.bg) ms.classList.add(s.bg);
+  ms.classList.toggle('ms-grain', s.grain);
+  ms.classList.toggle('ms-vignette', s.vig);
+  ms.innerHTML = s.render(c);
+}
+
+function firstWord(text) {
+  return text.split(/[,.\s]/)[0] || '✦';
+}
+
+/* ══ SEARCH ══ */
+document.getElementById('searchInput').addEventListener('input', e => {
+  state.search = e.target.value;
+  document.getElementById('searchClear').classList.toggle('show', !!state.search);
+  render();
+});
+document.getElementById('searchClear').addEventListener('click', () => {
+  state.search = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').classList.remove('show');
+  render();
+});
+
+/* ══ SORT ══ */
+document.querySelectorAll('.sort-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.sort-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    state.sort = p.dataset.sort;
+    render();
+  });
+});
+
+/* ══ SHUFFLE ══ */
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const c = filtered[Math.floor(Math.random() * filtered.length)];
+  selectCite(c);
+  // Scroll to selected
+  const cards = document.querySelectorAll('.cite-card');
+  const idx = [...getFiltered()].findIndex(x => x.text === c.text);
+  cards[idx]?.scrollIntoView({ behavior:'smooth', block:'center' });
+  showToast('Citation aléatoire ✦');
+});
+
+/* ══ APPLY BTN ══ */
+document.getElementById('applyBtn').addEventListener('click', () => {
+  if (!state.selectedCite) return;
+  applyCite(state.selectedCite);
+});
+
+/* ══ TOAST ══ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ══ KEYBOARD SHORTCUTS ══ */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'f' || e.key === 'F') {
+    document.getElementById('searchInput').focus();
+    e.preventDefault();
+  }
+  if (e.key === 'r' || e.key === 'R') document.getElementById('shuffleBtn').click();
+});
+
+/* ══ INIT ══ */
+buildStyleMini();
+render();
+</script>
+</body>
+</html>

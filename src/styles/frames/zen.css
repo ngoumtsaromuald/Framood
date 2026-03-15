@@ -1,0 +1,7 @@
+/* ── ZEN ── */
+.l-zen { padding: 42px 30px; justify-content: center; align-items: center; text-align: center; background: #f5f2ec; }
+.zen-jp { font-family: 'Noto Serif JP', serif; font-size: 13px; color: #2a2010; letter-spacing: 4px; margin-bottom: 24px; opacity: .4; }
+.zen-line { width: 1px; height: 40px; background: #2a2010; margin: 0 auto 24px; opacity: .2; }
+.zen-m { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 20px; color: #1a1810; line-height: 1.55; margin-bottom: 24px; letter-spacing: .5px; }
+.zen-l2 { width: 1px; height: 24px; background: #2a2010; margin: 0 auto 16px; opacity: .2; }
+.zen-s { font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: #6a5c3a; opacity: .6; }

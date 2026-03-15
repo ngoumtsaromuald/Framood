@@ -1,0 +1,6 @@
+/* ── STICKER ── */
+.l-sticker { padding: 36px 24px; justify-content: center; align-items: center; text-align: center; background: #ff6b35; }
+.sk-bord { position: absolute; inset: 10px; border: 4px dashed rgba(255,255,255,.5); border-radius: 12px; pointer-events: none; }
+.sk-stars { font-size: 14px; margin-bottom: 14px; letter-spacing: 4px; }
+.sk-m { font-family: 'Unbounded', sans-serif; font-size: 19px; font-weight: 900; color: #fff; line-height: 1.2; text-transform: uppercase; margin-bottom: 12px; text-shadow: 3px 3px 0 rgba(0,0,0,.2); }
+.sk-s { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.65; letter-spacing: 1px; }

@@ -1,0 +1,14 @@
+/* ── VHS ── */
+.l-vhs { padding: 0; justify-content: flex-end; background: #000; }
+.vhs-bg { position: absolute; inset: 0; background: linear-gradient(160deg, #0a0020, #200a00); z-index: 0; }
+.vhs-scan { position: absolute; inset: 0; background: repeating-linear-gradient(transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px); z-index: 1; pointer-events: none; }
+.vhs-noise { position: absolute; top: 20%; height: 4px; left: 0; right: 0; background: rgba(255,255,255,0.4); z-index: 2; animation: vhsglitch 4s steps(1) infinite; }
+.vhs-noise2 { position: absolute; top: 60%; height: 2px; left: 0; right: 0; background: rgba(255,0,100,0.5); z-index: 2; animation: vhsglitch 6s steps(1) infinite 2s; }
+@keyframes vhsglitch { 0%, 85%, 100% { opacity: 0; } 86%, 87% { opacity: 1; } 88% { opacity: 0; } 89% { opacity: 1; } 90% { opacity: 0; } }
+.vhs-cnt { position: relative; z-index: 3; padding: 22px 22px 38px; }
+.vhs-rec { display: flex; align-items: center; gap: 6px; margin-bottom: 20px; }
+.vhs-rec .dot { width: 7px; height: 7px; background: #f00; border-radius: 50%; animation: pulse2 1s ease infinite; }
+.vhs-rec span { font-family: 'Space Mono', monospace; font-size: 10px; color: #f00; letter-spacing: 2px; }
+@keyframes pulse2 { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.vhs-m { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: #fff; line-height: 1.35; margin-bottom: 14px; text-shadow: 2px 0 #f00, -2px 0 #0ff; }
+.vhs-tc { font-family: 'Space Mono', monospace; font-size: 9px; color: rgba(255,255,255,.4); letter-spacing: 2px; }

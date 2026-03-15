@@ -1,0 +1,7 @@
+/* ── POÉTIQUE ── */
+.l-poetique { padding: 46px 26px 38px; justify-content: center; align-items: center; text-align: center; }
+.po-tag { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; opacity: .4; margin-bottom: 22px; }
+.po-g { font-family: 'Ephesis', cursive; font-size: 54px; line-height: 1; margin-bottom: 7px; }
+.po-m { font-family: 'Italiana', serif; font-size: 19px; line-height: 1.35; margin-bottom: 20px; }
+.po-t { width: 22px; height: 1px; opacity: .35; margin: 0 auto 16px; }
+.po-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; line-height: 1.9; opacity: .7; max-width: 175px; }

@@ -1,0 +1,7 @@
+/* ── COSMIQUE ── */
+.l-cosmos { padding: 42px 26px; justify-content: center; background: radial-gradient(ellipse at 50% 30%, #1a0a3a 0%, #030010 60%); }
+.co-tag { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 5px; text-transform: uppercase; color: #a080ff; margin-bottom: 18px; opacity: .7; }
+.co-m { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; font-style: italic; color: #e0d0ff; line-height: 1.4; margin-bottom: 18px; }
+.co-st { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #a080ff, transparent); margin-bottom: 14px; opacity: .3; }
+.co-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: #a080ff; line-height: 1.9; opacity: .7; max-width: 185px; }
+.star { position: absolute; background: #fff; border-radius: 50%; width: 2px; height: 2px; }

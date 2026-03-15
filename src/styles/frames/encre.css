@@ -1,0 +1,6 @@
+/* ── ENCRE ── */
+.l-encre { padding: 42px 28px; justify-content: center; align-items: center; text-align: center; background: #f7f4ec; }
+.en-stroke { width: 50px; height: 3px; border-radius: 3px; background: #1a1810; margin: 0 auto 20px; opacity: .7; transform: skewX(-15deg); }
+.en-m { font-family: 'Libre Baskerville', serif; font-size: 20px; font-style: italic; color: #1a1810; line-height: 1.5; margin-bottom: 20px; }
+.en-seal { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #8a2010; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #8a2010; opacity: .6; }
+.en-s { font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #6a5c3a; opacity: .6; }

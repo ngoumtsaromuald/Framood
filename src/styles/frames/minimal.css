@@ -1,0 +1,4 @@
+/* ── MINIMALISTE ── */
+.l-minimal { padding: 48px 30px; justify-content: center; align-items: center; text-align: center; background: #f8f6f0; }
+.mi-l { font-family: 'DM Serif Display', serif; font-size: 21px; font-style: italic; color: #1a1810; line-height: 1.4; letter-spacing: .5px; margin-bottom: 30px; }
+.mi-dot { width: 4px; height: 4px; background: #c8a050; border-radius: 50%; margin: 0 auto; }

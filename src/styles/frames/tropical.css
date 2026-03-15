@@ -1,0 +1,6 @@
+/* ── TROPICAL ── */
+.l-tropical { padding: 42px 24px; justify-content: center; background: linear-gradient(160deg, #001a10, #002a18); }
+.tr-tag { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: #40ff90; margin-bottom: 18px; opacity: .7; }
+.tr-m { font-family: 'Abril Fatface', serif; font-size: 28px; color: #fff; line-height: 1.25; margin-bottom: 18px; text-shadow: 0 0 30px rgba(64,255,144,0.2); }
+.tr-t { width: 36px; height: 2px; background: linear-gradient(90deg, #40ff90, #00c060); border-radius: 2px; margin-bottom: 14px; opacity: .7; }
+.tr-s { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 200; color: rgba(64,255,144,.55); line-height: 1.9; }

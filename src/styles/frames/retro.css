@@ -1,0 +1,7 @@
+/* ── RÉTRO 70s ── */
+.l-retro { padding: 40px 24px; justify-content: center; background: #f0d060; }
+.re-tag { font-family: 'DM Sans', sans-serif; font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: #c06010; margin-bottom: 14px; opacity: .8; }
+.re-m { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: #3a1a00; line-height: 1.15; margin-bottom: 14px; letter-spacing: -.5px; }
+.re-m em { font-style: italic; color: #c06010; }
+.re-d { width: 34px; height: 3px; background: #c06010; margin-bottom: 12px; }
+.re-s { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #3a1a00; line-height: 1.75; opacity: .65; }
