@@ -1,41 +1,58 @@
-import { useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import PhoneFrame from '@/components/studio/PhoneFrame';
 import StyleSelector from '@/components/studio/StyleSelector';
+import ExportBar from '@/components/studio/ExportBar';
 import PaywallModal from '@/components/subscription/PaywallModal';
 import { FRAMES } from '@/components/frames';
 import type { FrameMeta, ThemeOption } from '@/types/frame';
+import { useStudioStore } from '@/store/useStudioStore';
+import { useState } from 'react';
 
 export default function Studio() {
-  const [selectedFrame, setSelectedFrame] = useState<FrameMeta>(FRAMES[0]!);
-  const [selectedTheme, setSelectedTheme] = useState<string>(
-    FRAMES[0]!.themes?.[0]?.cls ?? '',
-  );
-  const [text, setText] = useState('');
-  const [subtext, setSubtext] = useState('');
-  const [tag, setTag] = useState('');
   const [showPaywall, setShowPaywall] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  // Read from store
+  const selectedFrameId = useStudioStore((s) => s.selectedFrameId);
+  const selectedTheme = useStudioStore((s) => s.selectedTheme);
+  const text = useStudioStore((s) => s.text);
+  const subtext = useStudioStore((s) => s.subtext);
+  const tag = useStudioStore((s) => s.tag);
+
+  // Actions
+  const setFrame = useStudioStore((s) => s.setFrame);
+  const setText = useStudioStore((s) => s.setText);
+  const setSubtext = useStudioStore((s) => s.setSubtext);
+  const setTag = useStudioStore((s) => s.setTag);
+
+  const selectedFrame = FRAMES.find((f) => f.id === selectedFrameId) ?? FRAMES[0]!;
 
   const handleSelectFrame = useCallback((frame: FrameMeta) => {
-    setSelectedFrame(frame);
-    setSelectedTheme(frame.themes?.[0]?.cls ?? '');
-  }, []);
+    setFrame(frame.id, frame.themes?.[0]?.cls);
+  }, [setFrame]);
 
   const handleProClick = useCallback(() => {
     setShowPaywall(true);
   }, []);
 
+  const handleThemeSelect = useCallback((cls: string) => {
+    setFrame(selectedFrameId, cls);
+  }, [setFrame, selectedFrameId]);
+
   return (
-    <div className="px-4 py-6 md:px-8 pb-24">
+    <div className="px-4 py-6 md:px-8 pb-32">
       <div className="max-w-2xl mx-auto space-y-4">
         {/* Preview */}
         <div className="flex flex-col items-center gap-3">
-          <PhoneFrame
-            frameId={selectedFrame.id}
-            theme={selectedTheme}
-            text={text || selectedFrame.label}
-            subtext={subtext}
-            tag={tag}
-          />
+          <div ref={exportRef}>
+            <PhoneFrame
+              frameId={selectedFrameId}
+              theme={selectedTheme}
+              text={text || selectedFrame.label}
+              subtext={subtext}
+              tag={tag}
+            />
+          </div>
           <p
             className="text-center"
             style={{
@@ -64,7 +81,7 @@ export default function Studio() {
             Style ({FRAMES.length})
           </span>
           <StyleSelector
-            selectedId={selectedFrame.id}
+            selectedId={selectedFrameId}
             onSelect={handleSelectFrame}
             onProClick={handleProClick}
           />
@@ -91,13 +108,13 @@ export default function Studio() {
                   key={t.cls}
                   className={`theme-btn${selectedTheme === t.cls ? ' active' : ''}`}
                   style={{ background: t.gradient }}
-                  onClick={() => setSelectedTheme(t.cls)}
+                  onClick={() => handleThemeSelect(t.cls)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setSelectedTheme(t.cls);
+                      handleThemeSelect(t.cls);
                     }
                   }}
                 >
@@ -223,6 +240,9 @@ export default function Studio() {
           </div>
         </div>
       </div>
+
+      {/* Export bar */}
+      <ExportBar exportRef={exportRef} />
 
       <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
     </div>

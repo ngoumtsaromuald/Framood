@@ -31,3 +31,6 @@ export interface FrameMeta {
   noGrain: boolean;
   noVignette: boolean;
 }
+
+/** Export format determines the output dimensions */
+export type ExportFormat = 'story' | 'wallpaper' | 'square' | 'desktop';
