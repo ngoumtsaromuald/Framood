@@ -26,6 +26,33 @@ export default function Auth() {
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  // Handle OAuth callback
+  useEffect(() => {
+    const handleOAuthCallback = async () => {
+      // Check if we're returning from OAuth
+      const params = new URLSearchParams(window.location.search);
+      const hasOAuthParams = params.has('code') || params.has('access_token') || params.has('error');
+      
+      if (hasOAuthParams) {
+        setLoading(true);
+        try {
+          // SDK automatically handles OAuth callback
+          await insforge.auth.getCurrentSession();
+          addToast('success', 'Connexion réussie');
+          // Clean URL
+          window.history.replaceState({}, '', window.location.pathname);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : 'Erreur de connexion OAuth';
+          addToast('error', msg);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    handleOAuthCallback();
+  }, [addToast]);
+
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {

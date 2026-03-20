@@ -1,11 +1,14 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Share2, Image } from 'lucide-react';
+import { Download, Share2, Image, Save } from 'lucide-react';
 import { useStudioStore } from '@/store/useStudioStore';
 import { useToastStore } from '@/store/useToastStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { exportToPng, shareImage, downloadImage } from '@/lib/export-engine';
+import { insforge } from '@/lib/insforge';
 import { FRAMES } from '@/components/frames';
 import FormatPicker from './FormatPicker';
+import type { MoodCategory } from '@/types/emotion';
 
 interface ExportBarProps {
   exportRef: React.RefObject<HTMLElement | null>;
@@ -13,9 +16,16 @@ interface ExportBarProps {
 
 export default function ExportBar({ exportRef }: ExportBarProps) {
   const [isExporting, setIsExporting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [showFormatPicker, setShowFormatPicker] = useState(false);
   const exportFormat = useStudioStore((s) => s.exportFormat);
   const selectedFrameId = useStudioStore((s) => s.selectedFrameId);
+  const text = useStudioStore((s) => s.text);
+  const subtext = useStudioStore((s) => s.subtext);
+  const tag = useStudioStore((s) => s.tag);
+  const selectedTheme = useStudioStore((s) => s.selectedTheme);
+  const moodCategory = useStudioStore((s) => s.selectedMood);
+  const user = useAuthStore((s) => s.user);
   const addToast = useToastStore((s) => s.addToast);
 
   const getExportOptions = useCallback(() => {
@@ -55,6 +65,61 @@ export default function ExportBar({ exportRef }: ExportBarProps) {
       setIsExporting(false);
     }
   }, [exportRef, exportFormat, isExporting, getExportOptions, addToast]);
+
+  const handleSaveToGallery = useCallback(async () => {
+    if (!exportRef.current || isSaving || !user) return;
+    
+    // Default mood if none selected
+    const mood = moodCategory || 'paix';
+    
+    setIsSaving(true);
+
+    try {
+      // 1. Export to PNG
+      const blob = await exportToPng(
+        exportRef.current,
+        exportFormat,
+        getExportOptions(),
+      );
+
+      // 2. Upload to storage
+      const timestamp = Date.now();
+      const filename = `${user.id}-${timestamp}.png`;
+      
+      const { data: uploadData, error: uploadError } = await insforge.storage
+        .from('mood-frames')
+        .upload(filename, blob);
+
+      if (uploadError) throw uploadError;
+
+      // 3. Save to database
+      const { error: dbError } = await insforge.database
+        .from('mood_entries')
+        .insert([{
+          user_id: user.id,
+          mood_category: mood as MoodCategory,
+          mood_text: text,
+          style_id: selectedFrameId,
+          style_config: {
+            theme: selectedTheme,
+            subtext,
+            tag,
+          },
+          image_url: uploadData.url,
+          export_format: exportFormat,
+          ai_generated: false,
+        }]);
+
+      if (dbError) throw dbError;
+
+      addToast('success', 'Sauvegardé dans la galerie ✨');
+    } catch (err) {
+      console.error('[Framood] Save failed:', err);
+      addToast('error', 'Erreur lors de la sauvegarde');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [exportRef, exportFormat, isSaving, user, text, subtext, tag, selectedFrameId, selectedTheme, moodCategory, getExportOptions, addToast]);
 
   const handleDownload = useCallback(async () => {
     if (!exportRef.current || isExporting) return;
@@ -129,30 +194,47 @@ export default function ExportBar({ exportRef }: ExportBarProps) {
             <Download size={16} />
           </button>
 
-          {/* Main share/export button */}
+          {/* Save to gallery button */}
           <button
-            onClick={handleExport}
-            disabled={isExporting}
+            onClick={handleSaveToGallery}
+            disabled={isSaving || !user}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-body font-medium transition-colors"
             style={{
-              background: isExporting ? 'var(--gold-dark)' : 'var(--gold)',
+              background: isSaving ? 'var(--gold-dark)' : 'var(--gold)',
               color: '#0A0600',
               letterSpacing: '2px',
               textTransform: 'uppercase',
-              opacity: isExporting ? 0.7 : 1,
+              opacity: isSaving ? 0.7 : 1,
             }}
           >
-            {isExporting ? (
+            {isSaving ? (
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
               >
-                <Download size={18} />
+                <Save size={18} />
               </motion.div>
             ) : (
-              <Share2 size={18} />
+              <Save size={18} />
             )}
-            {isExporting ? 'Export…' : 'Partager'}
+            {isSaving ? 'Sauvegarde…' : 'Sauvegarder'}
+          </button>
+
+          {/* Share button */}
+          <button
+            onClick={handleExport}
+            disabled={isExporting}
+            className="flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-body transition-colors"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid var(--border)',
+              color: 'var(--muted-2)',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              opacity: isExporting ? 0.5 : 1,
+            }}
+          >
+            <Share2 size={16} />
           </button>
         </div>
       </motion.div>
