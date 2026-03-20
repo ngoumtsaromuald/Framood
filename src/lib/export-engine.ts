@@ -17,14 +17,17 @@ interface ExportOptions {
 
 /** Render the watermark onto the canvas */
 function drawWatermark(ctx: CanvasRenderingContext2D, width: number, height: number): void {
-  const fontSize = Math.round(width * 0.011); // 1.1% of width
+  const fontSize = Math.round(width * 0.035); // 3.5% of width ~ 38px on 1080
   ctx.save();
-  ctx.font = `${fontSize}px 'Cormorant Garamond', serif`;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.globalAlpha = 0.45;
-  ctx.textAlign = 'right';
+  ctx.font = `500 ${fontSize}px 'DM Sans', sans-serif`;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 2;
+  ctx.shadowBlur = 8;
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'bottom';
-  ctx.fillText('Framood', width - fontSize, height - fontSize * 0.8);
+  ctx.fillText('Créé avec Framood', width / 2, height - fontSize * 1.5);
   ctx.restore();
 }
 
@@ -41,9 +44,8 @@ export async function exportToPng(
   const pixelRatio = 3;
 
   // Capture the DOM element to a data URL via html-to-image
+  // We don't force width/height here so it captures natural dimensions
   const dataUrl = await toPng(element, {
-    width: dims.width / pixelRatio,
-    height: dims.height / pixelRatio,
     pixelRatio,
     cacheBust: true,
     style: {
@@ -67,8 +69,19 @@ export async function exportToPng(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D context unavailable');
 
-  // Draw the captured image
-  ctx.drawImage(img, 0, 0, dims.width, dims.height);
+  // 1. Draw solid premium background (instead of huge grey area)
+  ctx.fillStyle = '#0A0906'; // match --bg
+  ctx.fillRect(0, 0, dims.width, dims.height);
+
+  // 2. Calculate aspect ratio to perfectly center the phone (object-fit: contain)
+  const scale = Math.min(dims.width / img.width, dims.height / img.height);
+  const drawW = img.width * scale;
+  const drawH = img.height * scale;
+  const drawX = (dims.width - drawW) / 2;
+  const drawY = (dims.height - drawH) / 2;
+
+  // 3. Draw the captured image perfectly centered
+  ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
   // Apply effects
   if (options.grain > 0) {
@@ -78,7 +91,7 @@ export async function exportToPng(
     applyVignette(ctx, dims.width, dims.height, options.vignette);
   }
 
-  // Always add watermark
+  // Always add watermark clearly
   drawWatermark(ctx, dims.width, dims.height);
 
   // Convert to Blob
