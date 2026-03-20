@@ -57,6 +57,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       if (profile) {
         isOnboarded = profile.onboarded === true;
+      } else {
+        // Profile doesn't exist (OAuth first login) - create it
+        await insforge.database.from('user_profiles').insert([{
+          id: user.id,
+          display_name: user.name || user.email.split('@')[0],
+          onboarded: false,
+        }]);
+        isOnboarded = false;
       }
 
       set({ user, isLoading: false, isOnboarded });
@@ -156,7 +164,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signInWithOAuth: async (provider) => {
     await insforge.auth.signInWithOAuth({
       provider,
-      redirectTo: window.location.origin,
+      redirectTo: `${window.location.origin}/auth`,
     });
   },
 
